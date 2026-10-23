@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<body>
+<header class="site-header" th:fragment="header">
+    <a class="brand" href="/" aria-label="이사해드림 홈">
+        <img src="/images/logo.svg" alt="이사해드림">
+    </a>
+    <nav aria-label="주요 메뉴">
+        <a href="/#services">이사 서비스</a>
+        <a href="/#areas">서비스 지역</a>
+        <a href="/#process">진행 안내</a>
+    </nav>
+    <a class="header-call" th:href="|tel:${site.phoneHref}|" th:text="${site.phoneDisplay}">010-5297-2459</a>
+</header>
+
+<footer class="site-footer" th:fragment="footer">
+    <div>
+        <img src="/images/logo.svg" alt="이사해드림">
+        <p>지역 여건과 이사 일정에 맞춰 상담합니다.</p>
+    </div>
+    <div class="footer-contact">
+        <a th:href="|tel:${site.phoneHref}|" th:text="${site.phoneDisplay}">010-5297-2459</a>
+        <a th:href="${site.kakaoUrl}" target="_blank" rel="noopener">카카오톡 상담</a>
+        <a href="/admin">관리자</a>
+    </div>
+</footer>
+
+<div class="mobile-actions" th:fragment="mobileActions">
+    <a class="mobile-call" th:href="|tel:${site.phoneHref}|">전화 상담</a>
+    <a class="mobile-kakao" th:href="${site.kakaoUrl}" target="_blank" rel="noopener">카카오톡</a>
+</div>
+</body>
+</html>

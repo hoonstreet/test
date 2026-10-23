@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${content.title}">지역 이사</title>
+    <meta name="description" th:content="${content.description}">
+    <meta name="robots" th:content="${content.customPublished} ? 'index,follow' : 'noindex,follow'">
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+<div class="page-shell">
+    <header th:replace="~{fragments/site :: header}"></header>
+    <main>
+        <section class="landing-hero">
+            <div class="breadcrumb">
+                <a href="/">홈</a><span>/</span><a th:href="|/regions/${region.slug}|" th:text="${region.name}"></a>
+                <th:block th:if="${neighborhood != null}"><span>/</span><strong th:text="${neighborhood.name}"></strong></th:block>
+            </div>
+            <div class="landing-grid">
+                <article>
+                    <span class="eyebrow" th:text="${movingService.name}">포장이사</span>
+                    <h1 th:text="${content.headline}">지역 포장이사, 이사해드림</h1>
+                    <p th:text="${content.introduction}"></p>
+                    <div class="hero-actions">
+                        <a class="button primary" th:href="|tel:${site.phoneHref}|">전화 상담</a>
+                        <a class="button kakao" th:href="${site.kakaoUrl}" target="_blank" rel="noopener">카카오톡</a>
+                    </div>
+                </article>
+                <aside class="bento consultation-card">
+                    <span>상담 전 알려주세요</span>
+                    <ul><li>희망 이사 날짜</li><li>출발지와 도착지</li><li>짐의 대략적인 양</li><li>엘리베이터·주차 여부</li></ul>
+                </aside>
+            </div>
+        </section>
+        <section class="content-layout section-block">
+            <article class="content-copy">
+                <span class="eyebrow">LOCAL GUIDE</span>
+                <h2 th:text="|${neighborhood != null ? neighborhood.name : region.name} ${movingService.name} 안내|">지역 안내</h2>
+                <div class="prose" th:text="${content.body}"></div>
+            </article>
+            <aside class="side-links">
+                <h3 th:text="|${region.name} 다른 서비스|">다른 서비스</h3>
+                <a th:each="item : ${services}" th:href="|/regions/${region.slug}/${item.slug}|" th:text="${item.name}"></a>
+            </aside>
+        </section>
+        <section class="final-cta compact-cta"><h2>일정과 지역을 알려주시면<br>상담을 도와드릴게요</h2><a class="button white" th:href="|tel:${site.phoneHref}|" th:text="${site.phoneDisplay}"></a></section>
+    </main>
+    <footer th:replace="~{fragments/site :: footer}"></footer>
+</div>
+<div th:replace="~{fragments/site :: mobileActions}"></div>
+</body>
+</html>

@@ -1,0 +1,31 @@
+spring:
+  application:
+    name: isahaedream-cms
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/isahaedream}
+    username: ${DB_USERNAME:isahaedream}
+    password: ${DB_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+  thymeleaf:
+    cache: ${THYMELEAF_CACHE:true}
+
+server:
+  forward-headers-strategy: framework
+  error:
+    include-message: never
+
+app:
+  base-url: ${BASE_URL:http://localhost:8080}
+  search-index-enabled: ${SEARCH_INDEX_ENABLED:false}
+  admin:
+    username: ${ADMIN_USERNAME:admin}
+    password: ${ADMIN_PASSWORD:}
+
+logging:
+  level:
+    org.springframework.security: INFO

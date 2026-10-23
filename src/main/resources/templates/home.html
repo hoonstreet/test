@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">이사해드림</title>
+    <meta name="description" th:content="${pageDescription}">
+    <link rel="stylesheet" href="/css/site.css">
+</head>
+<body>
+<div class="page-shell">
+    <header th:replace="~{fragments/site :: header}"></header>
+
+    <main>
+        <section class="hero-grid" aria-labelledby="hero-title">
+            <article class="bento hero-main">
+                <span class="eyebrow">MOVING PARTNER</span>
+                <h1 id="hero-title">이사 고민부터<br><em>마무리까지</em></h1>
+                <p>지역과 건물 여건을 먼저 확인하고 필요한 작업을 정직하게 안내합니다.</p>
+                <div class="hero-actions">
+                    <a class="button primary" th:href="|tel:${site.phoneHref}|">전화로 바로 상담</a>
+                    <a class="button kakao" th:href="${site.kakaoUrl}" target="_blank" rel="noopener">카카오톡 상담</a>
+                </div>
+            </article>
+
+            <article class="bento trust-card">
+                <span class="card-icon">01</span>
+                <h2>현장에 맞춘 상담</h2>
+                <p>짐의 양과 주차, 엘리베이터, 사다리차 동선을 함께 확인합니다.</p>
+            </article>
+
+            <article class="bento phone-card">
+                <span>대표 상담번호</span>
+                <a th:href="|tel:${site.phoneHref}|" th:text="${site.phoneDisplay}">010-5297-2459</a>
+                <small>전화 연결이 어려우면 카카오톡에 내용을 남겨주세요.</small>
+            </article>
+
+            <article class="bento visual-card" aria-label="현장 사진 준비 중">
+                <div class="visual-orbit"></div>
+                <strong>MOVE<br>BETTER</strong>
+                <span>현장 사진은 개인정보 보정 후 적용됩니다.</span>
+            </article>
+        </section>
+
+        <section id="services" class="section-block">
+            <div class="section-heading">
+                <div><span class="eyebrow">SERVICES</span><h2>필요한 이사를 선택하세요</h2></div>
+                <p>여섯 가지 서비스에서 가까운 지역의 상담 페이지로 이동할 수 있습니다.</p>
+            </div>
+            <div class="service-grid">
+                <article class="bento service-card" th:each="service, stat : ${services}">
+                    <span class="service-number" th:text="|0${stat.count}|">01</span>
+                    <h3 th:text="${service.name}">포장이사</h3>
+                    <p th:text="${service.shortDescription}"></p>
+                    <a href="#areas">지역 선택 <span>↗</span></a>
+                </article>
+            </div>
+        </section>
+
+        <section id="areas" class="section-block areas-section">
+            <div class="section-heading inverse">
+                <div><span class="eyebrow">SERVICE AREA</span><h2>가까운 지역을 찾아보세요</h2></div>
+                <p>서울 동북권과 경기 동부권을 중심으로 상담합니다.</p>
+            </div>
+            <div class="area-grid">
+                <a class="area-chip" th:each="region : ${regions}" th:href="|/regions/${region.slug}|">
+                    <strong th:text="${region.name}">중랑구</strong>
+                    <span>지역 보기 →</span>
+                </a>
+            </div>
+        </section>
+
+        <section id="process" class="section-block">
+            <div class="section-heading">
+                <div><span class="eyebrow">PROCESS</span><h2>상담부터 이사까지</h2></div>
+                <p>복잡한 과정은 줄이고 확인해야 할 내용은 분명하게 안내합니다.</p>
+            </div>
+            <div class="process-grid">
+                <article class="bento"><span>01</span><h3>상담 접수</h3><p>전화나 카카오톡으로 일정과 지역을 알려주세요.</p></article>
+                <article class="bento"><span>02</span><h3>현장 조건 확인</h3><p>짐의 양, 차량 진입과 작업 동선을 확인합니다.</p></article>
+                <article class="bento"><span>03</span><h3>작업 안내</h3><p>필요한 인원과 장비, 작업 범위를 안내합니다.</p></article>
+                <article class="bento"><span>04</span><h3>안전한 진행</h3><p>보양부터 운송과 정리까지 순서대로 진행합니다.</p></article>
+            </div>
+        </section>
+
+        <section class="final-cta">
+            <span class="eyebrow">QUICK CONSULTATION</span>
+            <h2>이사 일정이 정해졌다면<br>먼저 상담해 보세요</h2>
+            <div class="hero-actions">
+                <a class="button white" th:href="|tel:${site.phoneHref}|" th:text="|전화 ${site.phoneDisplay}|">전화</a>
+                <a class="button kakao" th:href="${site.kakaoUrl}" target="_blank" rel="noopener">카카오톡 상담</a>
+            </div>
+        </section>
+    </main>
+
+    <footer th:replace="~{fragments/site :: footer}"></footer>
+</div>
+<div th:replace="~{fragments/site :: mobileActions}"></div>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>페이지 콘텐츠 | 이사해드림</title><link rel="stylesheet" href="/css/site.css"></head>
+<body class="admin-body">
+<div class="admin-shell">
+    <aside class="admin-nav"><img src="/images/logo.svg" alt="이사해드림"><nav><a href="/admin">대시보드</a><a class="active" href="/admin/content">페이지 콘텐츠</a><a href="/admin/settings">사이트 설정</a><a href="/" target="_blank">홈페이지 보기</a></nav></aside>
+    <main class="admin-main">
+        <span class="eyebrow">CONTENT</span><h1>지역 페이지 편집</h1><p>지역과 서비스를 선택한 뒤 고유한 내용을 작성하고 공개하세요.</p>
+        <div class="alert" th:if="${saved}">저장했습니다.</div>
+        <form class="admin-panel selector-form" method="get" action="/admin/content">
+            <label>시·구<select name="regionId" required onchange="this.form.submit()"><option value="">선택</option><option th:each="r : ${regions}" th:value="${r.id}" th:selected="${selectedRegion != null and selectedRegion.id == r.id}" th:text="${r.name}"></option></select></label>
+            <label>하위 동<select name="neighborhoodId" th:disabled="${selectedRegion == null}"><option value="">시·구 전체</option><option th:each="n : ${neighborhoods}" th:value="${n.id}" th:selected="${selectedNeighborhood != null and selectedNeighborhood.id == n.id}" th:text="${n.name}"></option></select></label>
+            <label>서비스<select name="serviceId" required><option value="">선택</option><option th:each="s : ${services}" th:value="${s.id}" th:selected="${selectedService != null and selectedService.id == s.id}" th:text="${s.name}"></option></select></label>
+            <button class="button primary" type="submit">페이지 불러오기</button>
+        </form>
+        <form class="admin-panel editor-form" method="post" action="/admin/content" th:if="${selectedRegion != null and selectedService != null}">
+            <input type="hidden" name="regionId" th:value="${selectedRegion.id}"><input type="hidden" name="serviceId" th:value="${selectedService.id}"><input type="hidden" name="neighborhoodId" th:if="${selectedNeighborhood != null}" th:value="${selectedNeighborhood.id}">
+            <div class="editor-title"><div><span th:text="${selectedRegion.name}"></span><span th:if="${selectedNeighborhood != null}" th:text="| · ${selectedNeighborhood.name}|"></span><h2 th:text="${selectedService.name}"></h2></div><label class="toggle"><input type="checkbox" name="published" value="true" th:checked="${content != null and content.published}"> 고유 콘텐츠 공개</label></div>
+            <label>SEO 제목<input name="seoTitle" maxlength="120" th:value="${content != null ? content.seoTitle : preview.title}"></label>
+            <label>검색 설명<textarea name="metaDescription" maxlength="200" rows="3" th:text="${content != null ? content.metaDescription : preview.description}"></textarea></label>
+            <label>페이지 제목<input name="headline" maxlength="300" th:value="${content != null ? content.headline : preview.headline}"></label>
+            <label>소개 문구<textarea name="introduction" maxlength="1200" rows="5" th:text="${content != null ? content.introduction : preview.introduction}"></textarea></label>
+            <label>상세 본문<textarea name="body" rows="12" th:text="${content != null ? content.body : preview.body}"></textarea></label>
+            <button class="button primary" type="submit">저장하기</button>
+        </form>
+    </main>
+</div>
+</body>
+</html>
