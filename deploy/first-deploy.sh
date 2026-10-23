@@ -41,6 +41,11 @@ if [[ ! -f .env ]]; then
     exit 1
   fi
 
+  if [[ ! "$admin_password" =~ ^[A-Za-z0-9._@%+=:-]+$ ]]; then
+    echo "비밀번호에는 영문, 숫자와 . _ @ % + = : - 문자만 사용할 수 있습니다." >&2
+    exit 1
+  fi
+
   postgres_password="$(openssl rand -hex 32)"
   umask 077
   {

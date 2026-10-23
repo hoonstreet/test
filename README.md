@@ -54,4 +54,5 @@ chmod +x deploy/first-deploy.sh
 
 스크립트는 관리자 비밀번호를 화면에 표시하지 않고 입력받으며, 데이터베이스 비밀번호를 서버에서
 무작위로 생성합니다. `.env`가 이미 있으면 덮어쓰지 않습니다. 도메인이 준비될 때까지
-`SEARCH_INDEX_ENABLED=false`를 유지합니다.
+`SEARCH_INDEX_ENABLED=false`를 유지합니다. 관리자 비밀번호는 12자 이상으로 만들고 영문, 숫자와
+`. _ @ % + = : -` 문자만 사용합니다.
