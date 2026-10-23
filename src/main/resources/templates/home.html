@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${pageTitle}">이사해드림</title>
     <meta name="description" th:content="${pageDescription}">
-    <link rel="stylesheet" href="/css/site.css">
+    <link rel="stylesheet" href="/css/site.css?v=20261023-1">
 </head>
 <body>
 <div class="page-shell">
@@ -35,10 +35,12 @@
                 <small>전화 연결이 어려우면 카카오톡에 내용을 남겨주세요.</small>
             </article>
 
-            <article class="bento visual-card" aria-label="현장 사진 준비 중">
-                <div class="visual-orbit"></div>
-                <strong>MOVE<br>BETTER</strong>
-                <span>현장 사진은 개인정보 보정 후 적용됩니다.</span>
+            <article class="bento visual-card" aria-label="아파트이사 작업 연출 이미지">
+                <img class="visual-photo" src="/images/services/apartment-move.webp" alt="아파트에서 사다리차로 이삿짐을 옮기는 연출 이미지" width="1200" height="750">
+                <div class="visual-copy">
+                    <strong>안전한 동선,<br>꼼꼼한 작업</strong>
+                    <span>현장 조건을 먼저 살피고 필요한 장비와 인원을 안내합니다.</span>
+                </div>
             </article>
         </section>
 
@@ -49,7 +51,10 @@
             </div>
             <div class="service-grid">
                 <article class="bento service-card" th:each="service, stat : ${services}">
-                    <span class="service-number" th:text="|0${stat.count}|">01</span>
+                    <div class="service-image-wrap">
+                        <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${service.name} 작업 연출 이미지|" width="1200" height="750" loading="lazy">
+                        <span class="service-number" th:text="|0${stat.count}|">01</span>
+                    </div>
                     <h3 th:text="${service.name}">포장이사</h3>
                     <p th:text="${service.shortDescription}"></p>
                     <a href="#areas">지역 선택 <span>↗</span></a>

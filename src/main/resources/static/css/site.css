@@ -54,19 +54,25 @@ main { padding: 22px; }
 .phone-card span { font-size: 13px; font-weight: 800; opacity: .85; }
 .phone-card a { font-size: clamp(24px, 2.4vw, 34px); line-height: 1.2; font-weight: 950; letter-spacing: -.04em; margin: 8px 0 12px; }
 .phone-card small { line-height: 1.4; opacity: .86; }
-.visual-card { grid-column: 2 / span 2; color: white; border: 0; background: linear-gradient(120deg, #071d49, #194eb0); display: flex; align-items: center; gap: 22px; }
-.visual-card strong { font-size: 42px; line-height: .9; letter-spacing: -.06em; z-index: 1; }
-.visual-card span { color: #cfe1ff; max-width: 230px; z-index: 1; }
-.visual-orbit { width: 110px; height: 110px; border: 24px solid #398cff; border-right-color: var(--orange); border-radius: 50%; transform: rotate(-22deg); }
+.visual-card { grid-column: 2 / span 2; color: white; border: 0; min-height: 230px; background: var(--blue-950); position: relative; padding: 0; }
+.visual-photo { width: 100%; height: 100%; object-fit: cover; position: absolute; inset: 0; }
+.visual-card::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, rgba(7,29,73,.92), rgba(7,29,73,.18) 72%); }
+.visual-copy { position: relative; z-index: 1; height: 100%; padding: 30px; display: flex; flex-direction: column; justify-content: end; }
+.visual-card strong { font-size: 30px; line-height: 1.05; letter-spacing: -.04em; }
+.visual-card span { color: #dceaff; max-width: 320px; margin-top: 10px; font-size: 13px; }
 
 .section-block { padding: 100px 28px 12px; }
 .section-heading { display: flex; justify-content: space-between; gap: 36px; align-items: end; margin-bottom: 34px; }
 .section-heading h2 { font-size: clamp(32px, 4vw, 54px); line-height: 1.12; letter-spacing: -.05em; margin: 0; }
 .section-heading p { max-width: 420px; color: var(--muted); margin: 0 0 6px; }
 .service-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-.service-card { padding: 28px; min-height: 240px; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; }
+.service-card { padding: 14px 14px 24px; min-height: 390px; display: flex; flex-direction: column; transition: transform .2s, box-shadow .2s; overflow: hidden; }
 .service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+.service-image-wrap { position: relative; margin-bottom: 6px; }
+.service-image { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 18px; }
+.service-image-wrap .service-number { position: absolute; left: 12px; bottom: 12px; }
 .service-card p { flex: 1; }
+.service-card h3, .service-card p, .service-card > a, .service-card > span:last-child { margin-left: 12px; margin-right: 12px; }
 .service-card a, .service-card > span:last-child { color: var(--blue-600); font-weight: 850; margin-top: 22px; }
 .areas-section { background: var(--blue-950); color: white; margin: 100px -22px 0; padding: 90px 50px; }
 .section-heading.inverse p { color: #b8c9e8; }
@@ -96,7 +102,7 @@ main { padding: 22px; }
 .sub-hero h1, .landing-hero h1 { font-size: clamp(42px, 6vw, 72px); line-height: 1.08; letter-spacing: -.055em; margin: 34px 0 18px; }
 .sub-hero h1 em { color: var(--blue-600); font-style: normal; }
 .sub-hero p { color: var(--muted); font-size: 18px; }
-.service-grid.compact .service-card { min-height: 190px; }
+.service-grid.compact .service-card { min-height: 350px; }
 .soft-panel { margin-top: 80px; padding: 70px 44px; border-radius: var(--radius); background: #f3f6fb; }
 .neighborhood-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .neighborhood-card { background: white; border-radius: 20px; padding: 22px; }
@@ -107,6 +113,10 @@ main { padding: 22px; }
 .breadcrumb { display: flex; gap: 8px; }
 .landing-grid { display: grid; grid-template-columns: 1.55fr .7fr; gap: 46px; margin-top: 30px; align-items: end; }
 .landing-grid article > p { max-width: 720px; color: var(--muted); font-size: 18px; }
+.landing-aside { display: grid; gap: 14px; }
+.landing-media { margin: 0; padding: 0; overflow: hidden; }
+.landing-media img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.landing-media figcaption { padding: 9px 14px 12px; color: var(--muted); font-size: 11px; }
 .consultation-card { padding: 30px; box-shadow: var(--shadow); }
 .consultation-card > span { color: var(--blue-600); font-weight: 900; }
 .consultation-card ul { margin: 18px 0 0; padding-left: 20px; color: var(--muted); }

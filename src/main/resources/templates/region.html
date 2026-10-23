@@ -4,7 +4,7 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${pageTitle}">지역 안내</title>
     <meta name="description" th:content="${pageDescription}">
-    <link rel="stylesheet" href="/css/site.css">
+    <link rel="stylesheet" href="/css/site.css?v=20261023-1">
 </head>
 <body>
 <div class="page-shell">
@@ -19,6 +19,9 @@
             <div class="section-heading"><div><span class="eyebrow">SERVICES</span><h2>이사 서비스</h2></div></div>
             <div class="service-grid compact">
                 <a class="bento service-card" th:each="service : ${services}" th:href="|/regions/${region.slug}/${service.slug}|">
+                    <div class="service-image-wrap">
+                        <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${service.name} 작업 연출 이미지|" width="1200" height="750" loading="lazy">
+                    </div>
                     <h3 th:text="${service.name}"></h3><p th:text="${service.shortDescription}"></p><span>상세 보기 →</span>
                 </a>
             </div>

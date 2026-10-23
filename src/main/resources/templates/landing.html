@@ -5,7 +5,7 @@
     <title th:text="${content.title}">지역 이사</title>
     <meta name="description" th:content="${content.description}">
     <meta name="robots" th:content="${content.customPublished} ? 'index,follow' : 'noindex,follow'">
-    <link rel="stylesheet" href="/css/site.css">
+    <link rel="stylesheet" href="/css/site.css?v=20261023-1">
 </head>
 <body>
 <div class="page-shell">
@@ -26,9 +26,15 @@
                         <a class="button kakao" th:href="${site.kakaoUrl}" target="_blank" rel="noopener">카카오톡</a>
                     </div>
                 </article>
-                <aside class="bento consultation-card">
-                    <span>상담 전 알려주세요</span>
-                    <ul><li>희망 이사 날짜</li><li>출발지와 도착지</li><li>짐의 대략적인 양</li><li>엘리베이터·주차 여부</li></ul>
+                <aside class="landing-aside">
+                    <figure class="bento landing-media">
+                        <img th:src="|/images/services/${movingService.slug}.webp|" th:alt="|${movingService.name} 작업 연출 이미지|" width="1200" height="750">
+                        <figcaption>서비스 이해를 돕기 위한 연출 이미지입니다.</figcaption>
+                    </figure>
+                    <div class="bento consultation-card">
+                        <span>상담 전 알려주세요</span>
+                        <ul><li>희망 이사 날짜</li><li>출발지와 도착지</li><li>짐의 대략적인 양</li><li>엘리베이터·주차 여부</li></ul>
+                    </div>
                 </aside>
             </div>
         </section>
