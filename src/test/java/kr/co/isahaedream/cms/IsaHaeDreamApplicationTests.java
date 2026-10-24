@@ -456,6 +456,29 @@ class IsaHaeDreamApplicationTests {
     }
 
     @Test
+    @Transactional
+    @WithMockUser(roles = "ADMIN")
+    void naverVerificationContentCanBeSavedAndRenderedInTheHead() throws Exception {
+        String verification = "naver-verification_test_123";
+
+        mockMvc.perform(post("/admin/settings")
+                        .with(csrf())
+                        .param("businessName", "이사해드림")
+                        .param("phoneDisplay", "010-5297-2459")
+                        .param("phoneHref", "01052972459")
+                        .param("kakaoUrl", "https://pf.kakao.com/_iITad")
+                        .param("tagline", "이사 고민부터 마무리까지, 이사해드림")
+                        .param("naverSiteVerification", verification))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/admin/settings"));
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(
+                        "name=\"naver-site-verification\" content=\"" + verification + "\"")));
+    }
+
+    @Test
     @WithMockUser(roles = "ADMIN")
     void adminDraftPreviewShowsSavedCopyWhilePublicPageKeepsFallbackCopy() throws Exception {
         var region = regionRepository.findBySlugAndEnabledTrue("gwangjin-gu").orElseThrow();
