@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle}">동별 이사 서비스</title>
+    <meta name="description" th:content="${pageDescription}">
+    <meta name="robots" th:content="${hubPublished} ? 'index,follow' : 'noindex,follow'">
+    <link rel="canonical" th:href="${canonicalUrl}">
+    <link rel="stylesheet" href="/css/site.css?v=20261024-1">
+</head>
+<body>
+<div class="page-shell">
+    <header th:replace="~{fragments/site :: header}"></header>
+    <main>
+        <section class="sub-hero neighborhood-hero">
+            <div class="breadcrumb">
+                <a href="/">홈</a><span>/</span>
+                <a th:href="|/regions/${region.slug}|" th:text="${region.name}">광진구</a><span>/</span>
+                <strong th:text="${neighborhood.name}">중곡동</strong>
+            </div>
+            <span class="eyebrow">LOCAL MOVING ROUTE</span>
+            <h1><em th:text="${neighborhood.name}">중곡동</em> 이사 서비스</h1>
+            <p th:text="|${region.name} ${neighborhood.name}에서 이사를 준비할 때 필요한 서비스와 상담 전 확인사항을 한곳에 정리했습니다.|"></p>
+            <div class="hero-actions">
+                <a class="button primary" th:href="|tel:${site.phoneHref}|">전화 상담</a>
+                <a class="button kakao" th:href="${site.kakaoUrl}" target="_blank" rel="noopener">카카오톡</a>
+            </div>
+        </section>
+
+        <section class="section-block">
+            <div class="section-heading">
+                <div><span class="eyebrow">SIX MOVING ROUTES</span><h2 th:text="|${neighborhood.name} 이사 방식 6가지|">이사 방식 6가지</h2></div>
+                <p>필요한 서비스를 선택하면 해당 지역의 준비사항과 상담 안내를 확인할 수 있습니다.</p>
+            </div>
+            <div class="service-grid compact">
+                <a class="bento service-card" th:each="service : ${services}" th:href="|/regions/${region.slug}/${neighborhood.slug}/${service.slug}|">
+                    <div class="service-image-wrap"><img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${region.name} ${neighborhood.name} ${service.name} 안내 이미지|" width="1200" height="750" loading="lazy"></div>
+                    <h3 th:text="|${neighborhood.name} ${service.name}|">중곡동 포장이사</h3>
+                    <p th:text="${service.shortDescription}"></p><span>준비사항 보기 →</span>
+                </a>
+            </div>
+        </section>
+
+        <section class="content-layout section-block local-checks">
+            <article class="content-copy">
+                <span class="eyebrow">BEFORE THE TRUCK ARRIVES</span>
+                <h2>견적 전에 정리할 항목</h2>
+                <div class="check-grid">
+                    <div><strong>짐량과 작업 범위</strong><p>큰 가구와 가전, 박스 수량, 포장과 정리 범위를 미리 알려주세요.</p></div>
+                    <div><strong>건물 이동 동선</strong><p>층수와 엘리베이터 사용 가능 여부, 계단 작업 여부를 확인합니다.</p></div>
+                    <div><strong>차량 접근과 주차</strong><p>이삿짐 차량이 건물 가까이 진입하고 정차할 수 있는지 확인합니다.</p></div>
+                    <div><strong>희망 날짜와 시간</strong><p>출발지와 도착지 일정, 관리사무소 예약 여부를 함께 확인합니다.</p></div>
+                </div>
+            </article>
+            <aside class="side-links">
+                <h3 th:text="|${region.name} 다음 지역|">다음 지역</h3>
+                <a th:each="item : ${neighborhoods}" th:if="${item.id != neighborhood.id}" th:href="|/regions/${region.slug}/${item.slug}|" th:text="|${item.name} 이사 안내|"></a>
+            </aside>
+        </section>
+        <section class="final-cta compact-cta"><h2 th:text="|${neighborhood.name} 이사 일정과 짐량을 알려주세요|">이사 상담</h2><a class="button white" th:href="|tel:${site.phoneHref}|" th:text="${site.phoneDisplay}"></a></section>
+    </main>
+    <footer th:replace="~{fragments/site :: footer}"></footer>
+</div>
+<div th:replace="~{fragments/site :: mobileActions}"></div>
+</body>
+</html>

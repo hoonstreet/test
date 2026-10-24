@@ -4,7 +4,8 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${pageTitle}">지역 안내</title>
     <meta name="description" th:content="${pageDescription}">
-    <link rel="stylesheet" href="/css/site.css?v=20261023-1">
+    <link rel="canonical" th:href="${canonicalUrl}">
+    <link rel="stylesheet" href="/css/site.css?v=20261024-1">
 </head>
 <body>
 <div class="page-shell">
@@ -30,7 +31,7 @@
             <div class="section-heading"><div><span class="eyebrow">NEIGHBORHOODS</span><h2>상세 지역</h2></div></div>
             <div class="neighborhood-grid">
                 <div class="neighborhood-card" th:each="neighborhood : ${neighborhoods}">
-                    <strong th:text="${neighborhood.name}"></strong>
+                    <a class="neighborhood-title" th:href="|/regions/${region.slug}/${neighborhood.slug}|" th:text="${neighborhood.name}"></a>
                     <div><a th:each="service : ${services}" th:href="|/regions/${region.slug}/${neighborhood.slug}/${service.slug}|" th:text="${service.name}"></a></div>
                 </div>
             </div>

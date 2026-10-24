@@ -5,16 +5,19 @@
     <title th:text="${content.title}">지역 이사</title>
     <meta name="description" th:content="${content.description}">
     <meta name="robots" th:content="${content.customPublished} ? 'index,follow' : 'noindex,follow'">
-    <link rel="stylesheet" href="/css/site.css?v=20261023-1">
+    <link rel="canonical" th:href="${canonicalUrl}">
+    <link rel="stylesheet" href="/css/site.css?v=20261024-1">
 </head>
 <body>
+<div class="preview-banner" th:if="${adminPreview}">관리자 초안 미리보기 · 이 내용은 아직 검색과 일반 방문자에게 공개되지 않습니다.</div>
 <div class="page-shell">
     <header th:replace="~{fragments/site :: header}"></header>
     <main>
         <section class="landing-hero">
             <div class="breadcrumb">
                 <a href="/">홈</a><span>/</span><a th:href="|/regions/${region.slug}|" th:text="${region.name}"></a>
-                <th:block th:if="${neighborhood != null}"><span>/</span><strong th:text="${neighborhood.name}"></strong></th:block>
+                <th:block th:if="${neighborhood != null}"><span>/</span><a th:href="|/regions/${region.slug}/${neighborhood.slug}|" th:text="${neighborhood.name}"></a></th:block>
+                <span>/</span><strong th:text="${movingService.name}"></strong>
             </div>
             <div class="landing-grid">
                 <article>
@@ -45,9 +48,22 @@
                 <div class="prose" th:text="${content.body}"></div>
             </article>
             <aside class="side-links">
-                <h3 th:text="|${region.name} 다른 서비스|">다른 서비스</h3>
-                <a th:each="item : ${services}" th:href="|/regions/${region.slug}/${item.slug}|" th:text="${item.name}"></a>
+                <h3 th:text="|${neighborhood != null ? neighborhood.name : region.name} 다른 서비스|">다른 서비스</h3>
+                <a th:if="${neighborhood != null}" th:each="item : ${services}"
+                   th:href="|/regions/${region.slug}/${neighborhood.slug}/${item.slug}|"
+                   th:text="${item.name}"></a>
+                <a th:if="${neighborhood == null}" th:each="item : ${services}"
+                   th:href="|/regions/${region.slug}/${item.slug}|"
+                   th:text="${item.name}"></a>
             </aside>
+        </section>
+        <section class="section-block nearby-panel" th:if="${neighborhood != null}">
+            <div class="section-heading"><div><span class="eyebrow">NEARBY ROUTES</span><h2 th:text="|${region.name} 다른 지역|">주변 지역</h2></div><p>같은 지역의 동별 이사 안내를 이어서 확인하세요.</p></div>
+            <div class="route-links">
+                <a th:each="item : ${neighborhoods}" th:if="${item.id != neighborhood.id}"
+                   th:href="|/regions/${region.slug}/${item.slug}/${movingService.slug}|"
+                   th:text="|${item.name} ${movingService.name}|"></a>
+            </div>
         </section>
         <section class="final-cta compact-cta"><h2>일정과 지역을 알려주시면<br>상담을 도와드릴게요</h2><a class="button white" th:href="|tel:${site.phoneHref}|" th:text="${site.phoneDisplay}"></a></section>
     </main>

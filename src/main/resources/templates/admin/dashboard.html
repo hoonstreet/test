@@ -6,7 +6,7 @@
     <aside class="admin-nav"><img src="/images/logo.svg" alt="이사해드림"><nav><a class="active" href="/admin">대시보드</a><a href="/admin/content">페이지 콘텐츠</a><a href="/admin/settings">사이트 설정</a><a href="/" target="_blank">홈페이지 보기</a></nav><form method="post" th:action="@{/logout}"><button type="submit">로그아웃</button></form></aside>
     <main class="admin-main">
         <span class="eyebrow">DASHBOARD</span><h1>콘텐츠 현황</h1><p>검색 노출 전 각 지역 페이지에 고유한 내용을 작성하세요.</p>
-        <div class="stat-grid"><article><strong th:text="${regionCount}">14</strong><span>시·구</span></article><article><strong th:text="${neighborhoodCount}">132</strong><span>하위 동</span></article><article><strong th:text="${serviceCount}">6</strong><span>이사 서비스</span></article></div>
+        <div class="stat-grid"><article><strong th:text="${regionCount}">14</strong><span>시·구</span></article><article><strong th:text="${neighborhoodCount}">132</strong><span>하위 동</span></article><article><strong th:text="${serviceCount}">6</strong><span>이사 서비스</span></article><article><strong th:text="${landingCount}">876</strong><span>지역·서비스 조합</span></article><article><strong th:text="${publishedCount}">0</strong><span>검수·공개 완료</span></article></div>
         <section class="admin-panel"><h2>등록 지역</h2><div class="admin-region-list"><a th:each="region : ${regions}" th:href="|/regions/${region.slug}|" target="_blank" th:text="${region.name}"></a></div></section>
     </main>
 </div>

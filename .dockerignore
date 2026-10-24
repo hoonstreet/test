@@ -2,5 +2,6 @@
 .env
 target
 data
+backups
 source-assets
 README.md

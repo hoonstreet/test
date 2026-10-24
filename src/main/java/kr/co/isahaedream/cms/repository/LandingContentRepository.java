@@ -12,4 +12,10 @@ public interface LandingContentRepository extends JpaRepository<LandingContent, 
 
     @EntityGraph(attributePaths = {"region", "neighborhood", "movingService"})
     List<LandingContent> findAllByPublishedTrue();
+
+    @EntityGraph(attributePaths = {"region", "neighborhood", "movingService"})
+    List<LandingContent> findAllByRegion(Region region);
+
+    long countByPublishedTrue();
+    boolean existsByNeighborhoodAndPublishedTrue(Neighborhood neighborhood);
 }

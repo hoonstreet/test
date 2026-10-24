@@ -4,7 +4,7 @@ set -euo pipefail
 EXPECTED_PUBLIC_IP="15.164.87.34"
 BLOCKED_PRODUCTION_IP="3.38.19.90"
 
-for command_name in curl docker openssl sudo; do
+for command_name in curl docker nginx openssl sudo systemctl; do
   if ! command -v "$command_name" >/dev/null 2>&1; then
     echo "Required command not found: $command_name" >&2
     exit 1
@@ -77,6 +77,9 @@ sudo systemctl reload nginx
 docker compose ps
 curl -fsS -o /dev/null -w 'local_http_status=%{http_code}\n' http://127.0.0.1:8080/
 curl -fsS -o /dev/null -w 'public_http_status=%{http_code}\n' "http://${EXPECTED_PUBLIC_IP}/"
+
+initial_backup="$(bash deploy/backup-db.sh)"
+echo "Initial database backup: $initial_backup"
 
 echo "Deployment complete: http://${EXPECTED_PUBLIC_IP}"
 echo "Admin login: http://${EXPECTED_PUBLIC_IP}/admin/login"

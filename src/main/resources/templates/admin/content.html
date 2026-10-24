@@ -5,23 +5,99 @@
 <div class="admin-shell">
     <aside class="admin-nav"><img src="/images/logo.svg" alt="이사해드림"><nav><a href="/admin">대시보드</a><a class="active" href="/admin/content">페이지 콘텐츠</a><a href="/admin/settings">사이트 설정</a><a href="/" target="_blank">홈페이지 보기</a></nav></aside>
     <main class="admin-main">
-        <span class="eyebrow">CONTENT</span><h1>지역 페이지 편집</h1><p>지역과 서비스를 선택한 뒤 고유한 내용을 작성하고 공개하세요.</p>
-        <div class="alert" th:if="${saved}">저장했습니다.</div>
-        <form class="admin-panel selector-form" method="get" action="/admin/content">
-            <label>시·구<select name="regionId" required onchange="this.form.submit()"><option value="">선택</option><option th:each="r : ${regions}" th:value="${r.id}" th:selected="${selectedRegion != null and selectedRegion.id == r.id}" th:text="${r.name}"></option></select></label>
-            <label>하위 동<select name="neighborhoodId" th:disabled="${selectedRegion == null}"><option value="">시·구 전체</option><option th:each="n : ${neighborhoods}" th:value="${n.id}" th:selected="${selectedNeighborhood != null and selectedNeighborhood.id == n.id}" th:text="${n.name}"></option></select></label>
-            <label>서비스<select name="serviceId" required><option value="">선택</option><option th:each="s : ${services}" th:value="${s.id}" th:selected="${selectedService != null and selectedService.id == s.id}" th:text="${s.name}"></option></select></label>
-            <button class="button primary" type="submit">페이지 불러오기</button>
-        </form>
-        <form class="admin-panel editor-form" method="post" action="/admin/content" th:if="${selectedRegion != null and selectedService != null}">
+        <span class="eyebrow">CONTENT</span><div class="admin-title-row"><div><h1>876개 페이지 관리</h1><p>지역별 작성 진행률을 확인하고, 검수가 끝난 페이지만 하나씩 공개하세요.</p></div><a class="button keyword-download" href="/admin/keywords.csv">승인 키워드 CSV</a></div>
+        <div class="alert" th:if="${saved}" th:text="${saved}">저장했습니다.</div>
+        <div class="alert error" th:if="${error}" th:text="${error}">공개 조건을 확인하세요.</div>
+
+        <section class="admin-panel region-picker">
+            <h2>관리할 시·구 선택</h2>
+            <div class="admin-region-list">
+                <a th:each="r : ${regions}" th:href="@{/admin/content(regionId=${r.id})}"
+                   th:classappend="${selectedRegion != null and selectedRegion.id == r.id} ? 'selected'"
+                   th:text="${r.name}">강동구</a>
+            </div>
+        </section>
+
+        <section th:if="${selectedRegion != null}">
+            <div class="content-progress admin-panel">
+                <div><span class="eyebrow">PROGRESS</span><h2 th:text="|${selectedRegion.name} 콘텐츠 현황|">강동구 콘텐츠 현황</h2></div>
+                <div class="progress-summary">
+                    <strong th:text="|${regionProgress}%|">0%</strong>
+                    <span th:text="|공개 ${regionPublishedCount} / 전체 ${regionTotalCount}|">공개 0 / 전체 60</span>
+                </div>
+                <div class="progress-track"><i th:style="|width:${regionProgress}%|"></i></div>
+                <div class="status-counts">
+                    <span class="status published" th:text="|공개 ${regionPublishedCount}|">공개 0</span>
+                    <span class="status draft" th:text="|작성중 ${regionDraftCount}|">작성중 0</span>
+                    <span class="status missing" th:text="|미작성 ${regionMissingCount}|">미작성 60</span>
+                </div>
+            </div>
+
+            <form class="admin-panel content-filters" method="get" th:action="@{/admin/content}">
+                <input type="hidden" name="regionId" th:value="${selectedRegion.id}">
+                <label>서비스
+                    <select name="filterServiceId">
+                        <option value="">전체 서비스</option>
+                        <option th:each="s : ${services}" th:value="${s.id}" th:selected="${filterServiceId != null and filterServiceId == s.id}" th:text="${s.name}"></option>
+                    </select>
+                </label>
+                <label>작성 상태
+                    <select name="status">
+                        <option value="all" th:selected="${statusFilter == 'all'}">전체 상태</option>
+                        <option value="missing" th:selected="${statusFilter == 'missing'}">미작성</option>
+                        <option value="draft" th:selected="${statusFilter == 'draft'}">작성중</option>
+                        <option value="published" th:selected="${statusFilter == 'published'}">공개</option>
+                    </select>
+                </label>
+                <button class="button primary" type="submit">필터 적용</button>
+            </form>
+
+            <div class="admin-panel content-table-wrap">
+                <table class="content-table">
+                    <thead><tr><th>지역</th><th>서비스</th><th>상태</th><th>최근 저장</th><th>관리</th></tr></thead>
+                    <tbody>
+                    <tr th:each="row : ${contentRows}">
+                        <td th:text="${row.areaName}">길동</td>
+                        <td th:text="${row.serviceName}">포장이사</td>
+                        <td><span class="status" th:classappend="${row.state}" th:text="${row.stateLabel}">미작성</span></td>
+                        <td th:text="${row.updatedLabel}">-</td>
+                        <td class="row-actions">
+                            <a class="edit-link" th:href="@{/admin/content(regionId=${selectedRegion.id},neighborhoodId=${row.neighborhoodId},serviceId=${row.serviceId},filterServiceId=${filterServiceId},status=${statusFilter})}">편집</a>
+                            <a th:href="@{/admin/content/preview(regionId=${selectedRegion.id},neighborhoodId=${row.neighborhoodId},serviceId=${row.serviceId})}" target="_blank" rel="noopener">초안 미리보기</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${#lists.isEmpty(contentRows)}"><td colspan="5" class="empty-row">조건에 맞는 페이지가 없습니다.</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <form class="admin-panel editor-form" method="post" th:action="@{/admin/content}" th:if="${selectedRegion != null and selectedService != null}" id="content-editor">
             <input type="hidden" name="regionId" th:value="${selectedRegion.id}"><input type="hidden" name="serviceId" th:value="${selectedService.id}"><input type="hidden" name="neighborhoodId" th:if="${selectedNeighborhood != null}" th:value="${selectedNeighborhood.id}">
-            <div class="editor-title"><div><span th:text="${selectedRegion.name}"></span><span th:if="${selectedNeighborhood != null}" th:text="| · ${selectedNeighborhood.name}|"></span><h2 th:text="${selectedService.name}"></h2></div><label class="toggle"><input type="checkbox" name="published" value="true" th:checked="${content != null and content.published}"> 고유 콘텐츠 공개</label></div>
-            <label>SEO 제목<input name="seoTitle" maxlength="120" th:value="${content != null ? content.seoTitle : preview.title}"></label>
-            <label>검색 설명<textarea name="metaDescription" maxlength="200" rows="3" th:text="${content != null ? content.metaDescription : preview.description}"></textarea></label>
-            <label>페이지 제목<input name="headline" maxlength="300" th:value="${content != null ? content.headline : preview.headline}"></label>
-            <label>소개 문구<textarea name="introduction" maxlength="1200" rows="5" th:text="${content != null ? content.introduction : preview.introduction}"></textarea></label>
-            <label>상세 본문<textarea name="body" rows="12" th:text="${content != null ? content.body : preview.body}"></textarea></label>
-            <button class="button primary" type="submit">저장하기</button>
+            <input type="hidden" name="filterServiceId" th:value="${filterServiceId}"><input type="hidden" name="status" th:value="${statusFilter}">
+            <div class="editor-title">
+                <div><span th:text="${selectedRegion.name}"></span><span th:if="${selectedNeighborhood != null}" th:text="| · ${selectedNeighborhood.name}|"></span><h2 th:text="${selectedService.name}"></h2></div>
+                <span class="status" th:classappend="${content != null and content.published} ? 'published' : 'draft'" th:text="${content != null and content.published} ? '공개' : '비공개 초안'">비공개 초안</span>
+            </div>
+            <div class="keyword-policy"><strong>지역 키워드 고정</strong><p>제목·검색 설명·URL에는 이 페이지에 지정된 지역명만 사용하세요. 중곡1~4동 같은 세부 명칭은 본문 설명에만 사용할 수 있습니다.</p></div>
+            <div class="quality-guide"><strong>공개 기준</strong><span>SEO 제목 10자</span><span>검색 설명 40자</span><span>페이지 제목 10자</span><span>소개 80자</span><span>본문 300자</span></div>
+            <div class="review-result" th:classappend="${qualityReady} ? 'ready' : 'needs-work'">
+                <strong th:text="${qualityReady} ? '자동 품질 검사 통과' : '공개 전 보완 필요'">자동 품질 검사 통과</strong>
+                <span th:if="${qualityReady}">최소 분량을 충족했습니다. 초안 미리보기에서 사실관계와 연락처를 직접 확인하세요.</span>
+                <ul th:unless="${qualityReady}"><li th:each="problem : ${qualityProblems}" th:text="${problem}"></li></ul>
+            </div>
+            <label>SEO 제목 <small>검색 결과의 제목입니다. 지역명과 서비스명을 자연스럽게 포함하세요.</small><input name="seoTitle" minlength="10" maxlength="120" th:value="${content != null ? content.seoTitle : preview.title}"></label>
+            <label>검색 설명 <small>이 페이지에서 제공하는 지역별 정보를 40자 이상으로 요약하세요.</small><textarea name="metaDescription" minlength="40" maxlength="200" rows="3" th:text="${content != null ? content.metaDescription : preview.description}"></textarea></label>
+            <label>페이지 제목<input name="headline" minlength="10" maxlength="300" th:value="${content != null ? content.headline : preview.headline}"></label>
+            <label>소개 문구 <small>해당 지역의 건물·주차·이동 동선 등 실제 상담 정보를 80자 이상 작성하세요.</small><textarea name="introduction" minlength="80" maxlength="1200" rows="5" th:text="${content != null ? content.introduction : preview.introduction}"></textarea></label>
+            <label>상세 본문 <small>단순히 지역명만 바꾼 문장이 아니라 고객에게 도움이 되는 고유 내용을 300자 이상 작성하세요.</small><textarea name="body" minlength="300" rows="14" th:text="${content != null ? content.body : preview.body}"></textarea></label>
+            <div class="publish-checklist">
+                <strong>공개 전 수동 확인</strong>
+                <label><input type="checkbox" name="reviewConfirmed" value="true"> 관리자 초안 미리보기에서 제목·본문·연락처를 확인했습니다.</label>
+                <label><input type="checkbox" name="published" value="true" th:checked="${content != null and content.published}"> 이 페이지를 공개 상태로 전환합니다.</label>
+                <small>두 항목을 모두 체크하지 않으면 저장해도 비공개 초안으로 유지됩니다.</small>
+            </div>
+            <div class="editor-actions"><button class="button primary" type="submit">저장하기</button><a class="button" th:href="@{/admin/content/preview(regionId=${selectedRegion.id},neighborhoodId=${selectedNeighborhood != null ? selectedNeighborhood.id : null},serviceId=${selectedService.id})}" target="_blank" rel="noopener">초안 미리보기</a></div>
         </form>
     </main>
 </div>
