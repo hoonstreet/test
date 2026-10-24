@@ -33,7 +33,7 @@
 - 고유 콘텐츠가 공개된 랜딩페이지만 사이트맵에 포함하는 검색 안전장치
 - 도메인 연결 전 검색 색인 기본 차단
 - PostgreSQL 17 및 Spring Boot 3.5.6 Docker Compose 구성
-- 프로젝트 폴더명이 바뀌어도 유지되는 고정 PostgreSQL 볼륨 `isahaedream_postgres_data`
+- 기존 서버 데이터를 그대로 유지하는 고정 PostgreSQL 볼륨 `isahaedream-site_postgres_data`
 - 무결성 검증·복구 전 자동 안전 백업을 포함한 PostgreSQL 백업·복구 스크립트
 - 애플리케이션 포트는 `127.0.0.1:8080`에만 바인딩
 - PostgreSQL 포트는 호스트에 공개하지 않음

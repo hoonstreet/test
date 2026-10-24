@@ -44,4 +44,4 @@ networks:
 
 volumes:
   postgres_data:
-    name: isahaedream_postgres_data
+    name: isahaedream-site_postgres_data
