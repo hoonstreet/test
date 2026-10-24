@@ -21,7 +21,7 @@
             <div class="service-grid compact">
                 <a class="bento service-card" th:each="service : ${services}" th:href="|/regions/${region.slug}/${service.slug}|">
                     <div class="service-image-wrap">
-                        <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${service.name} 작업 연출 이미지|" width="1200" height="750" loading="lazy">
+                        <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${service.name} 작업 이미지|" width="1200" height="750" loading="lazy">
                     </div>
                     <h3 th:text="${service.name}"></h3><p th:text="${service.shortDescription}"></p><span>상세 보기 →</span>
                 </a>
