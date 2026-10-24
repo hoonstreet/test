@@ -23,6 +23,9 @@ public class SiteSettings {
     @Column(nullable = false, length = 100)
     private String tagline = "이사 고민부터 마무리까지, 이사해드림";
 
+    @Column(nullable = false, length = 200)
+    private String naverSiteVerification = "";
+
     public SiteSettings() {}
 
     public Long getId() { return id; }
@@ -31,9 +34,11 @@ public class SiteSettings {
     public String getPhoneHref() { return phoneHref; }
     public String getKakaoUrl() { return kakaoUrl; }
     public String getTagline() { return tagline; }
+    public String getNaverSiteVerification() { return naverSiteVerification; }
     public void setBusinessName(String businessName) { this.businessName = businessName; }
     public void setPhoneDisplay(String phoneDisplay) { this.phoneDisplay = phoneDisplay; }
     public void setPhoneHref(String phoneHref) { this.phoneHref = phoneHref; }
     public void setKakaoUrl(String kakaoUrl) { this.kakaoUrl = kakaoUrl; }
     public void setTagline(String tagline) { this.tagline = tagline; }
+    public void setNaverSiteVerification(String naverSiteVerification) { this.naverSiteVerification = naverSiteVerification; }
 }

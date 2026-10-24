@@ -5,14 +5,20 @@
 <div class="admin-shell">
     <aside class="admin-nav"><img src="/images/logo.svg" alt="이사해드림"><nav><a href="/admin">대시보드</a><a href="/admin/content">페이지 콘텐츠</a><a class="active" href="/admin/settings">사이트 설정</a><a href="/" target="_blank">홈페이지 보기</a></nav></aside>
     <main class="admin-main">
-        <span class="eyebrow">SETTINGS</span><h1>사이트 공통 설정</h1><p>여기서 번호를 바꾸면 홈페이지 전체에 반영됩니다.</p>
+        <span class="eyebrow">SETTINGS</span><h1>사이트 공통 설정</h1><p>여기서 저장한 연락처와 사이트 인증값은 홈페이지 전체에 반영됩니다.</p>
         <div class="alert" th:if="${saved}">설정을 저장했습니다.</div>
+        <div class="alert error" th:if="${error}" th:text="${error}"></div>
         <form class="admin-panel editor-form" method="post" action="/admin/settings">
             <label>상호명<input name="businessName" required maxlength="60" th:value="${settings.businessName}"></label>
             <label>화면 표시 전화번호<input name="phoneDisplay" required maxlength="30" th:value="${settings.phoneDisplay}"></label>
             <label>전화 연결 번호<input name="phoneHref" required maxlength="30" th:value="${settings.phoneHref}"><small>숫자만 저장됩니다.</small></label>
             <label>카카오톡 상담 링크<input type="url" name="kakaoUrl" required maxlength="200" th:value="${settings.kakaoUrl}"></label>
             <label>대표 문구<input name="tagline" required maxlength="100" th:value="${settings.tagline}"></label>
+            <label>네이버 사이트 소유확인 값
+                <input name="naverSiteVerification" maxlength="200" pattern="[A-Za-z0-9._-]*"
+                       placeholder="content 값만 입력" th:value="${settings.naverSiteVerification}">
+                <small>네이버에서 받은 태그 중 <code>content=&quot;...&quot;</code> 안의 값만 입력하세요. 비워서 저장하면 인증 태그가 제거됩니다.</small>
+            </label>
             <button class="button primary" type="submit">설정 저장</button>
         </form>
     </main>

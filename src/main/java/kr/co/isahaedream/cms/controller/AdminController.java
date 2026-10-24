@@ -209,8 +209,14 @@ public class AdminController {
                                @RequestParam String phoneHref,
                                @RequestParam String kakaoUrl,
                                @RequestParam String tagline,
+                               @RequestParam(defaultValue = "") String naverSiteVerification,
                                RedirectAttributes redirect) {
-        settingsService.save(businessName, phoneDisplay, phoneHref, kakaoUrl, tagline);
+        String verification = naverSiteVerification.trim();
+        if (verification.length() > 200 || !verification.matches("[A-Za-z0-9._-]*")) {
+            redirect.addFlashAttribute("error", "네이버 인증값은 content 안의 영문, 숫자, 점(.), 밑줄(_), 하이픈(-)만 입력해 주세요.");
+            return "redirect:/admin/settings";
+        }
+        settingsService.save(businessName, phoneDisplay, phoneHref, kakaoUrl, tagline, verification);
         redirect.addFlashAttribute("saved", true);
         return "redirect:/admin/settings";
     }

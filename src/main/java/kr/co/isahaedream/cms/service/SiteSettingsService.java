@@ -20,13 +20,14 @@ public class SiteSettingsService {
 
     @Transactional
     public SiteSettings save(String businessName, String phoneDisplay, String phoneHref,
-                             String kakaoUrl, String tagline) {
+                             String kakaoUrl, String tagline, String naverSiteVerification) {
         SiteSettings settings = repository.findById(1L).orElseGet(SiteSettings::new);
         settings.setBusinessName(businessName.trim());
         settings.setPhoneDisplay(phoneDisplay.trim());
         settings.setPhoneHref(phoneHref.replaceAll("[^0-9]", ""));
         settings.setKakaoUrl(kakaoUrl.trim());
         settings.setTagline(tagline.trim());
+        settings.setNaverSiteVerification(naverSiteVerification == null ? "" : naverSiteVerification.trim());
         return repository.save(settings);
     }
 }
