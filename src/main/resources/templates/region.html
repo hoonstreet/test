@@ -12,7 +12,8 @@
     <meta th:if="${!#strings.isEmpty(site.naverSiteVerification)}" name="naver-site-verification" th:content="${site.naverSiteVerification}">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="canonical" th:href="${canonicalUrl}">
-    <link rel="stylesheet" href="/css/site.css?v=20261024-1">
+    <link rel="stylesheet" href="/css/site.css?v=20261025-1">
+    <script src="/js/site.js?v=20261025-1" defer></script>
     <script type="application/ld+json" th:utext="${structuredDataJson}"></script>
 </head>
 <body>
@@ -26,13 +27,17 @@
         </section>
         <section class="section-block">
             <div class="section-heading"><div><span class="eyebrow">SERVICES</span><h2>이사 서비스</h2></div></div>
-            <div class="service-grid compact">
-                <a class="bento service-card" th:each="service : ${services}" th:href="|/regions/${region.slug}/${service.slug}|">
-                    <div class="service-image-wrap">
-                        <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${region.name} ${service.name} 작업 이미지|" width="1200" height="750" loading="lazy">
-                    </div>
-                    <h3 th:text="${service.name}"></h3><p th:text="${service.shortDescription}"></p><span>상세 보기 →</span>
-                </a>
+            <div class="service-carousel" data-service-carousel>
+                <button class="carousel-button previous" type="button" aria-label="이전 이사 서비스" data-carousel-previous>‹</button>
+                <div class="service-grid compact" data-carousel-track>
+                    <a class="bento service-card" th:each="service : ${services}" th:href="|/regions/${region.slug}/${service.slug}|">
+                        <div class="service-image-wrap">
+                            <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${region.name} ${service.name} 작업 이미지|" width="1200" height="750" loading="lazy">
+                        </div>
+                        <h3 th:text="${service.name}"></h3><p th:text="${service.shortDescription}"></p><span>상세 보기 →</span>
+                    </a>
+                </div>
+                <button class="carousel-button next" type="button" aria-label="다음 이사 서비스" data-carousel-next>›</button>
             </div>
         </section>
         <section class="section-block soft-panel">

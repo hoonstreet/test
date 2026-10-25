@@ -16,7 +16,8 @@
     <meta th:if="${!#strings.isEmpty(site.naverSiteVerification)}" name="naver-site-verification" th:content="${site.naverSiteVerification}">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="canonical" th:href="${canonicalUrl}">
-    <link rel="stylesheet" href="/css/site.css?v=20261024-1">
+    <link rel="stylesheet" href="/css/site.css?v=20261025-1">
+    <script src="/js/site.js?v=20261025-1" defer></script>
     <script type="application/ld+json" th:utext="${structuredDataJson}"></script>
 </head>
 <body>
@@ -61,16 +62,20 @@
                 <div><span class="eyebrow">SERVICES</span><h2>필요한 이사를 선택하세요</h2></div>
                 <p>여섯 가지 서비스에서 가까운 지역의 상담 페이지로 이동할 수 있습니다.</p>
             </div>
-            <div class="service-grid">
-                <article class="bento service-card" th:each="service, stat : ${services}">
-                    <div class="service-image-wrap">
-                        <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${service.name} 작업 이미지|" width="1200" height="750" loading="lazy">
-                        <span class="service-number" th:text="|0${stat.count}|">01</span>
-                    </div>
-                    <h3 th:text="${service.name}">포장이사</h3>
-                    <p th:text="${service.shortDescription}"></p>
-                    <a href="#areas">지역 선택 <span>↗</span></a>
-                </article>
+            <div class="service-carousel" data-service-carousel>
+                <button class="carousel-button previous" type="button" aria-label="이전 이사 서비스" data-carousel-previous>‹</button>
+                <div class="service-grid" data-carousel-track>
+                    <article class="bento service-card" th:each="service, stat : ${services}">
+                        <div class="service-image-wrap">
+                            <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${service.name} 작업 이미지|" width="1200" height="750" loading="lazy">
+                            <span class="service-number" th:text="|0${stat.count}|">01</span>
+                        </div>
+                        <h3 th:text="${service.name}">포장이사</h3>
+                        <p th:text="${service.shortDescription}"></p>
+                        <a href="#areas">지역 선택 <span>↗</span></a>
+                    </article>
+                </div>
+                <button class="carousel-button next" type="button" aria-label="다음 이사 서비스" data-carousel-next>›</button>
             </div>
         </section>
 
