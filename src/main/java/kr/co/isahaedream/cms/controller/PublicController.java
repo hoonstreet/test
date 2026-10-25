@@ -1,5 +1,7 @@
 package kr.co.isahaedream.cms.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.co.isahaedream.cms.config.ApprovedLocationCatalog;
 import kr.co.isahaedream.cms.domain.*;
 import kr.co.isahaedream.cms.repository.*;
@@ -11,7 +13,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 public class PublicController {
@@ -20,6 +25,7 @@ public class PublicController {
     private final MovingServiceRepository movingServiceRepository;
     private final LandingContentRepository landingContentRepository;
     private final LandingPageService landingPageService;
+    private final ObjectMapper objectMapper;
     private final String baseUrl;
 
     public PublicController(RegionRepository regionRepository,
@@ -27,34 +33,47 @@ public class PublicController {
                             MovingServiceRepository movingServiceRepository,
                             LandingContentRepository landingContentRepository,
                             LandingPageService landingPageService,
+                            ObjectMapper objectMapper,
                             @Value("${app.base-url}") String baseUrl) {
         this.regionRepository = regionRepository;
         this.neighborhoodRepository = neighborhoodRepository;
         this.movingServiceRepository = movingServiceRepository;
         this.landingContentRepository = landingContentRepository;
         this.landingPageService = landingPageService;
+        this.objectMapper = objectMapper;
         this.baseUrl = baseUrl.replaceAll("/+$", "");
     }
 
     @GetMapping("/")
     public String home(Model model) {
+        String pageTitle = "이사해드림 | 지역별 포장이사 상담";
+        String pageDescription = "포장이사, 보관이사, 입주이사, 사무실이사, 아파트이사를 전화와 카카오톡으로 상담하세요.";
+        String canonicalUrl = baseUrl + "/";
         model.addAttribute("regions", approvedRegions());
         model.addAttribute("services", movingServiceRepository.findAllByEnabledTrueOrderByDisplayOrderAsc());
-        model.addAttribute("pageTitle", "이사해드림 | 지역별 포장이사 상담");
-        model.addAttribute("pageDescription", "포장이사, 보관이사, 입주이사, 사무실이사, 아파트이사를 전화와 카카오톡으로 상담하세요.");
-        model.addAttribute("canonicalUrl", baseUrl + "/");
+        model.addAttribute("pageTitle", pageTitle);
+        model.addAttribute("pageDescription", pageDescription);
+        model.addAttribute("canonicalUrl", canonicalUrl);
+        addImageSeo(model, pageTitle, pageDescription, canonicalUrl,
+                baseUrl + "/images/services/packing-move.webp", null);
         return "home";
     }
 
     @GetMapping("/regions/{regionSlug}")
     public String region(@PathVariable String regionSlug, Model model) {
         Region region = region(regionSlug);
+        List<MovingService> services = movingServiceRepository.findAllByEnabledTrueOrderByDisplayOrderAsc();
+        String pageTitle = region.getName() + " 이사 서비스 | 이사해드림";
+        String pageDescription = region.getName() + "의 지역별 포장이사 및 이사 서비스 상담 안내입니다.";
+        String canonicalUrl = baseUrl + "/regions/" + region.getSlug();
         model.addAttribute("region", region);
         model.addAttribute("neighborhoods", approvedNeighborhoods(region));
-        model.addAttribute("services", movingServiceRepository.findAllByEnabledTrueOrderByDisplayOrderAsc());
-        model.addAttribute("pageTitle", region.getName() + " 이사 서비스 | 이사해드림");
-        model.addAttribute("pageDescription", region.getName() + "의 지역별 포장이사 및 이사 서비스 상담 안내입니다.");
-        model.addAttribute("canonicalUrl", baseUrl + "/regions/" + region.getSlug());
+        model.addAttribute("services", services);
+        model.addAttribute("pageTitle", pageTitle);
+        model.addAttribute("pageDescription", pageDescription);
+        model.addAttribute("canonicalUrl", canonicalUrl);
+        addImageSeo(model, pageTitle, pageDescription, canonicalUrl,
+                serviceImageUrl("packing-move"), serviceItems(region.getName(), canonicalUrl, services));
         return "region";
     }
 
@@ -83,16 +102,20 @@ public class PublicController {
     }
 
     private String landing(Region region, Neighborhood neighborhood, MovingService service, Model model) {
+        LandingPageService.LandingPageView content = landingPageService.view(region, neighborhood, service);
         model.addAttribute("region", region);
         model.addAttribute("neighborhood", neighborhood);
         model.addAttribute("movingService", service);
-        model.addAttribute("content", landingPageService.view(region, neighborhood, service));
+        model.addAttribute("content", content);
         model.addAttribute("services", movingServiceRepository.findAllByEnabledTrueOrderByDisplayOrderAsc());
         model.addAttribute("neighborhoods", approvedNeighborhoods(region));
         String path = "/regions/" + region.getSlug() + "/";
         if (neighborhood != null) path += neighborhood.getSlug() + "/";
         path += service.getSlug();
-        model.addAttribute("canonicalUrl", baseUrl + path);
+        String canonicalUrl = baseUrl + path;
+        model.addAttribute("canonicalUrl", canonicalUrl);
+        addImageSeo(model, content.title(), content.description(), canonicalUrl,
+                serviceImageUrl(service.getSlug()), null);
         return "landing";
     }
 
@@ -100,15 +123,73 @@ public class PublicController {
         if (!ApprovedLocationCatalog.isApprovedNeighborhood(region.getSlug(), neighborhood.getSlug())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
+        List<MovingService> services = movingServiceRepository.findAllByEnabledTrueOrderByDisplayOrderAsc();
+        String pageTitle = neighborhood.getName() + " 이사 서비스 | " + region.getName() + " 이사해드림";
+        String pageDescription = region.getName() + " " + neighborhood.getName() + "의 포장이사, 보관이사, 입주이사, 사무실이사, 아파트이사 상담 안내입니다.";
+        String canonicalUrl = baseUrl + "/regions/" + region.getSlug() + "/" + neighborhood.getSlug();
+        String areaName = region.getName() + " " + neighborhood.getName();
         model.addAttribute("region", region);
         model.addAttribute("neighborhood", neighborhood);
-        model.addAttribute("services", movingServiceRepository.findAllByEnabledTrueOrderByDisplayOrderAsc());
+        model.addAttribute("services", services);
         model.addAttribute("neighborhoods", approvedNeighborhoods(region));
-        model.addAttribute("pageTitle", neighborhood.getName() + " 이사 서비스 | " + region.getName() + " 이사해드림");
-        model.addAttribute("pageDescription", region.getName() + " " + neighborhood.getName() + "의 포장이사, 보관이사, 입주이사, 사무실이사, 아파트이사 상담 안내입니다.");
+        model.addAttribute("pageTitle", pageTitle);
+        model.addAttribute("pageDescription", pageDescription);
         model.addAttribute("hubPublished", landingContentRepository.existsByNeighborhoodAndPublishedTrue(neighborhood));
-        model.addAttribute("canonicalUrl", baseUrl + "/regions/" + region.getSlug() + "/" + neighborhood.getSlug());
+        model.addAttribute("canonicalUrl", canonicalUrl);
+        addImageSeo(model, pageTitle, pageDescription, canonicalUrl,
+                serviceImageUrl("packing-move"), serviceItems(areaName, canonicalUrl, services));
         return "neighborhood";
+    }
+
+    private void addImageSeo(Model model, String title, String description, String canonicalUrl,
+                             String imageUrl, List<Map<String, Object>> items) {
+        model.addAttribute("ogImageUrl", imageUrl);
+        Map<String, Object> page = new LinkedHashMap<>();
+        page.put("@type", "WebPage");
+        page.put("url", canonicalUrl);
+        page.put("name", title);
+        page.put("description", description);
+        page.put("inLanguage", "ko-KR");
+        page.put("primaryImageOfPage", Map.of("@type", "ImageObject", "url", imageUrl,
+                "width", 1200, "height", 750));
+
+        List<Map<String, Object>> graph = new ArrayList<>();
+        graph.add(page);
+        if (items != null) {
+            Map<String, Object> itemList = new LinkedHashMap<>();
+            itemList.put("@type", "ItemList");
+            itemList.put("numberOfItems", items.size());
+            itemList.put("itemListElement", items);
+            graph.add(itemList);
+        }
+        try {
+            String json = objectMapper.writeValueAsString(Map.of(
+                    "@context", "https://schema.org",
+                    "@graph", graph));
+            model.addAttribute("structuredDataJson", json.replace("</", "<\\/"));
+        } catch (JsonProcessingException e) {
+            throw new IllegalStateException("검색 메타데이터를 만들 수 없습니다.", e);
+        }
+    }
+
+    private List<Map<String, Object>> serviceItems(String areaName, String canonicalUrl,
+                                                    List<MovingService> services) {
+        List<Map<String, Object>> items = new ArrayList<>();
+        for (int index = 0; index < services.size(); index++) {
+            MovingService service = services.get(index);
+            Map<String, Object> item = new LinkedHashMap<>();
+            item.put("@type", "ListItem");
+            item.put("position", index + 1);
+            item.put("name", areaName + " " + service.getName());
+            item.put("url", canonicalUrl + "/" + service.getSlug());
+            item.put("image", serviceImageUrl(service.getSlug()));
+            items.add(item);
+        }
+        return items;
+    }
+
+    private String serviceImageUrl(String serviceSlug) {
+        return baseUrl + "/images/services/" + serviceSlug + ".webp";
     }
 
     private Region region(String slug) {

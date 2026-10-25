@@ -374,7 +374,10 @@ class IsaHaeDreamApplicationTests {
                 .andExpect(header().string("X-Robots-Tag", "noindex, nofollow, noarchive"))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("010-5297-2459")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString(
-                        "rel=\"icon\" href=\"/favicon.svg\"")));
+                        "rel=\"icon\" href=\"/favicon.svg\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(
+                        "property=\"og:image\" content=\"http://localhost:8080/images/services/packing-move.webp\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("max-image-preview:large")));
 
         mockMvc.perform(get("/favicon.svg"))
                 .andExpect(status().isOk())
@@ -386,7 +389,9 @@ class IsaHaeDreamApplicationTests {
         mockMvc.perform(get("/regions/gwangjin-gu/junggok-dong"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("중곡동 이사 서비스")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("중곡동 포장이사")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("중곡동 포장이사")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("\"@type\":\"ItemList\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("광진구 중곡동 포장이사 안내 이미지")));
         mockMvc.perform(get("/regions/jungnang-gu/packing-move"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("중랑구 포장이사")));

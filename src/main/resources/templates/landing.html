@@ -5,10 +5,17 @@
     <title th:text="${content.title}">지역 이사</title>
     <meta name="description" th:content="${content.description}">
     <meta th:if="${!#strings.isEmpty(site.naverSiteVerification)}" name="naver-site-verification" th:content="${site.naverSiteVerification}">
-    <meta name="robots" th:content="${content.customPublished} ? 'index,follow' : 'noindex,follow'">
+    <meta name="robots" th:content="${content.customPublished} ? 'index,follow,max-image-preview:large' : 'noindex,follow,max-image-preview:large'">
+    <th:block th:if="${ogImageUrl != null}">
+        <meta property="og:type" content="website"><meta property="og:title" th:content="${content.title}">
+        <meta property="og:description" th:content="${content.description}"><meta property="og:image" th:content="${ogImageUrl}">
+        <meta property="og:image:width" content="1200"><meta property="og:image:height" content="750">
+        <meta property="og:url" th:content="${canonicalUrl}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" th:content="${ogImageUrl}">
+    </th:block>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="canonical" th:href="${canonicalUrl}">
     <link rel="stylesheet" href="/css/site.css?v=20261024-1">
+    <script th:if="${structuredDataJson != null}" type="application/ld+json" th:utext="${structuredDataJson}"></script>
 </head>
 <body>
 <div class="preview-banner" th:if="${adminPreview}">관리자 초안 미리보기 · 이 내용은 아직 검색과 일반 방문자에게 공개되지 않습니다.</div>
@@ -33,7 +40,7 @@
                 </article>
                 <aside class="landing-aside">
                     <figure class="bento landing-media">
-                        <img th:src="|/images/services/${movingService.slug}.webp|" th:alt="|${movingService.name} 작업 이미지|" width="1200" height="750">
+                        <img th:src="|/images/services/${movingService.slug}.webp|" th:alt="|${region.name} ${neighborhood != null ? neighborhood.name + ' ' : ''}${movingService.name} 작업 이미지|" width="1200" height="750">
                     </figure>
                     <div class="bento consultation-card">
                         <span>상담 전 알려주세요</span>

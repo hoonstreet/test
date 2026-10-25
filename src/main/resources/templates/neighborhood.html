@@ -6,10 +6,15 @@
     <title th:text="${pageTitle}">동별 이사 서비스</title>
     <meta name="description" th:content="${pageDescription}">
     <meta th:if="${!#strings.isEmpty(site.naverSiteVerification)}" name="naver-site-verification" th:content="${site.naverSiteVerification}">
-    <meta name="robots" th:content="${hubPublished} ? 'index,follow' : 'noindex,follow'">
+    <meta name="robots" th:content="${hubPublished} ? 'index,follow,max-image-preview:large' : 'noindex,follow,max-image-preview:large'">
+    <meta property="og:type" content="website"><meta property="og:title" th:content="${pageTitle}">
+    <meta property="og:description" th:content="${pageDescription}"><meta property="og:image" th:content="${ogImageUrl}">
+    <meta property="og:image:width" content="1200"><meta property="og:image:height" content="750">
+    <meta property="og:url" th:content="${canonicalUrl}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" th:content="${ogImageUrl}">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="canonical" th:href="${canonicalUrl}">
     <link rel="stylesheet" href="/css/site.css?v=20261024-1">
+    <script type="application/ld+json" th:utext="${structuredDataJson}"></script>
 </head>
 <body>
 <div class="page-shell">

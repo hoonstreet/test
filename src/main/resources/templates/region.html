@@ -4,10 +4,16 @@
     <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
     <title th:text="${pageTitle}">지역 안내</title>
     <meta name="description" th:content="${pageDescription}">
+    <meta name="robots" content="max-image-preview:large">
+    <meta property="og:type" content="website"><meta property="og:title" th:content="${pageTitle}">
+    <meta property="og:description" th:content="${pageDescription}"><meta property="og:image" th:content="${ogImageUrl}">
+    <meta property="og:image:width" content="1200"><meta property="og:image:height" content="750">
+    <meta property="og:url" th:content="${canonicalUrl}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" th:content="${ogImageUrl}">
     <meta th:if="${!#strings.isEmpty(site.naverSiteVerification)}" name="naver-site-verification" th:content="${site.naverSiteVerification}">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="canonical" th:href="${canonicalUrl}">
     <link rel="stylesheet" href="/css/site.css?v=20261024-1">
+    <script type="application/ld+json" th:utext="${structuredDataJson}"></script>
 </head>
 <body>
 <div class="page-shell">
@@ -23,7 +29,7 @@
             <div class="service-grid compact">
                 <a class="bento service-card" th:each="service : ${services}" th:href="|/regions/${region.slug}/${service.slug}|">
                     <div class="service-image-wrap">
-                        <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${service.name} 작업 이미지|" width="1200" height="750" loading="lazy">
+                        <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${region.name} ${service.name} 작업 이미지|" width="1200" height="750" loading="lazy">
                     </div>
                     <h3 th:text="${service.name}"></h3><p th:text="${service.shortDescription}"></p><span>상세 보기 →</span>
                 </a>
