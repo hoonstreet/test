@@ -6,6 +6,7 @@
     <meta name="description" th:content="${content.description}">
     <meta th:if="${!#strings.isEmpty(site.naverSiteVerification)}" name="naver-site-verification" th:content="${site.naverSiteVerification}">
     <meta name="robots" th:content="${content.customPublished} ? 'index,follow' : 'noindex,follow'">
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="canonical" th:href="${canonicalUrl}">
     <link rel="stylesheet" href="/css/site.css?v=20261024-1">
 </head>

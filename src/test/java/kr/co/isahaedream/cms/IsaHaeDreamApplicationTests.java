@@ -372,7 +372,13 @@ class IsaHaeDreamApplicationTests {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(header().string("X-Robots-Tag", "noindex, nofollow, noarchive"))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("010-5297-2459")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("010-5297-2459")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(
+                        "rel=\"icon\" href=\"/favicon.svg\"")));
+
+        mockMvc.perform(get("/favicon.svg"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith("image/svg+xml"));
     }
 
     @Test
