@@ -452,7 +452,8 @@ class IsaHaeDreamApplicationTests {
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("876개 페이지 관리")));
         mockMvc.perform(get("/admin/settings"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("010-5297-2459")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("010-5297-2459")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("name=\"_csrf\"")));
     }
 
     @Test

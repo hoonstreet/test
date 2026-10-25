@@ -8,7 +8,7 @@
         <span class="eyebrow">SETTINGS</span><h1>사이트 공통 설정</h1><p>여기서 저장한 연락처와 사이트 인증값은 홈페이지 전체에 반영됩니다.</p>
         <div class="alert" th:if="${saved}">설정을 저장했습니다.</div>
         <div class="alert error" th:if="${error}" th:text="${error}"></div>
-        <form class="admin-panel editor-form" method="post" action="/admin/settings">
+        <form class="admin-panel editor-form" method="post" th:action="@{/admin/settings}">
             <label>상호명<input name="businessName" required maxlength="60" th:value="${settings.businessName}"></label>
             <label>화면 표시 전화번호<input name="phoneDisplay" required maxlength="30" th:value="${settings.phoneDisplay}"></label>
             <label>전화 연결 번호<input name="phoneHref" required maxlength="30" th:value="${settings.phoneHref}"><small>숫자만 저장됩니다.</small></label>
