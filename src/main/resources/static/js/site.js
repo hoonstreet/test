@@ -6,48 +6,59 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!track || !previous || !next || track.children.length < 2) return;
 
-        const originals = Array.from(track.children);
-        const firstClone = originals[0].cloneNode(true);
-        const lastClone = originals[originals.length - 1].cloneNode(true);
+        let items = Array.from(track.children);
+        let moving = false;
 
-        [firstClone, lastClone].forEach((clone) => {
+        const makeClone = (item) => {
+            const clone = item.cloneNode(true);
             clone.classList.add("carousel-clone");
             clone.setAttribute("aria-hidden", "true");
-            clone.querySelectorAll("a, button").forEach((item) => item.setAttribute("tabindex", "-1"));
-        });
-
-        track.prepend(lastClone);
-        track.append(firstClone);
+            clone.querySelectorAll("a, button").forEach((control) => control.setAttribute("tabindex", "-1"));
+            return clone;
+        };
 
         const step = () => track.children[1].offsetLeft - track.children[0].offsetLeft;
-        const jumpTo = (position) => {
+
+        const jumpToStart = () => {
             track.style.scrollBehavior = "auto";
-            track.scrollLeft = position;
+            track.scrollLeft = step();
             track.style.scrollBehavior = "smooth";
         };
 
-        requestAnimationFrame(() => jumpTo(step()));
+        const rebuild = () => {
+            track.replaceChildren(makeClone(items[items.length - 1]), ...items, makeClone(items[0]));
+            jumpToStart();
+        };
 
-        next.addEventListener("click", () => {
-            const amount = step();
-            track.scrollBy({ left: amount, behavior: "smooth" });
-            window.setTimeout(() => {
-                if (track.scrollLeft >= amount * (originals.length + 1) - 2) jumpTo(amount);
-            }, 420);
-        });
+        const rotate = (direction) => {
+            if (moving) return;
+            moving = true;
 
-        previous.addEventListener("click", () => {
             const amount = step();
-            track.scrollBy({ left: -amount, behavior: "smooth" });
+            track.scrollTo({
+                left: direction === "next" ? amount * 2 : 0,
+                behavior: "smooth"
+            });
+
             window.setTimeout(() => {
-                if (track.scrollLeft <= 2) jumpTo(amount * originals.length);
+                if (direction === "next") {
+                    items.push(items.shift());
+                } else {
+                    items.unshift(items.pop());
+                }
+                rebuild();
+                moving = false;
             }, 420);
-        });
+        };
+
+        rebuild();
+        next.addEventListener("click", () => rotate("next"));
+        previous.addEventListener("click", () => rotate("previous"));
 
         let resizeTimer;
         window.addEventListener("resize", () => {
             window.clearTimeout(resizeTimer);
-            resizeTimer = window.setTimeout(() => jumpTo(step()), 120);
+            resizeTimer = window.setTimeout(rebuild, 120);
         });
     });
 });
