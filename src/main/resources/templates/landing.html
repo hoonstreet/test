@@ -9,7 +9,8 @@
     <th:block th:if="${ogImageUrl != null}">
         <meta property="og:type" content="website"><meta property="og:title" th:content="${content.title}">
         <meta property="og:description" th:content="${content.description}"><meta property="og:image" th:content="${ogImageUrl}">
-        <meta property="og:image:width" content="1200"><meta property="og:image:height" content="750">
+        <meta property="og:image:alt" th:content="|${region.name} ${neighborhood != null ? neighborhood.name + ' ' : ''}${movingService.name}|"><meta property="og:locale" content="ko_KR">
+        <meta property="og:image:width" content="1000"><meta property="og:image:height" content="1000">
         <meta property="og:url" th:content="${canonicalUrl}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" th:content="${ogImageUrl}">
     </th:block>
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -40,7 +41,7 @@
                 </article>
                 <aside class="landing-aside">
                     <figure class="bento landing-media">
-                        <img th:src="|/images/services/${movingService.slug}.webp|" th:alt="|${region.name} ${neighborhood != null ? neighborhood.name + ' ' : ''}${movingService.name} 작업 이미지|" width="1200" height="750">
+                        <img th:src="|/images/services/${movingService.slug}.webp|" th:alt="|${region.name} ${neighborhood != null ? neighborhood.name + ' ' : ''}${movingService.name}|" width="1000" height="1000" loading="eager" fetchpriority="high">
                     </figure>
                     <div class="bento consultation-card">
                         <span>상담 전 알려주세요</span>

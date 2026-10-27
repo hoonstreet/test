@@ -66,12 +66,14 @@ main { padding: 22px; }
 .section-heading h2 { font-size: clamp(32px, 4vw, 54px); line-height: 1.12; letter-spacing: -.05em; margin: 0; }
 .section-heading p { max-width: 420px; color: var(--muted); margin: 0 0 6px; }
 .service-carousel { position: relative; padding: 0 34px; }
+.search-service-gallery { padding: 0; }
 .service-grid { display: flex; gap: 10px; overflow-x: auto; scroll-behavior: smooth; scroll-snap-type: x mandatory; scrollbar-width: none; }
 .service-grid::-webkit-scrollbar { display: none; }
 .service-card { flex: 0 0 calc((100% - 50px) / 6); padding: 8px 8px 14px; min-width: 0; min-height: 238px; display: flex; flex-direction: column; scroll-snap-align: start; transition: transform .2s, box-shadow .2s; overflow: hidden; }
 .service-card:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
 .service-image-wrap { position: relative; margin-bottom: 6px; }
 .service-image { width: 100%; height: clamp(104px, 9vw, 132px); object-fit: cover; border-radius: 14px; }
+.search-service-card .service-image { height: auto; aspect-ratio: 1 / 1; }
 .service-image-wrap .service-number { position: absolute; left: 12px; bottom: 12px; }
 .service-card h3 { margin-top: 9px; font-size: 17px; line-height: 1.3; }
 .service-card p { flex: 1; display: -webkit-box; overflow: hidden; -webkit-box-orient: vertical; -webkit-line-clamp: 1; font-size: 12px; line-height: 1.5; }
@@ -110,6 +112,13 @@ main { padding: 22px; }
 .sub-hero h1 em { color: var(--blue-600); font-style: normal; }
 .sub-hero p { color: var(--muted); font-size: 18px; }
 .service-grid.compact .service-card { min-height: 222px; }
+.service-guide-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+.service-guide { scroll-margin-top: 110px; display: grid; grid-template-columns: 58px 1fr; gap: 20px; padding: 32px; border: 1px solid var(--line); border-radius: 22px; background: var(--white); }
+.service-guide-number { display: grid; place-items: center; width: 52px; height: 52px; color: var(--blue-600); background: var(--blue-50); border-radius: 16px; font-weight: 950; }
+.service-guide .eyebrow { margin-bottom: 7px; }
+.service-guide h2 { margin: 0 0 10px; font-size: clamp(23px, 2.2vw, 32px); line-height: 1.25; letter-spacing: -.035em; }
+.service-guide p { margin: 0 0 16px; color: var(--muted); }
+.text-link { color: var(--blue-600); font-weight: 850; }
 .soft-panel { margin-top: 80px; padding: 70px 44px; border-radius: var(--radius); background: #f3f6fb; }
 .neighborhood-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 .neighborhood-card { background: white; border-radius: 20px; padding: 22px; }
@@ -258,6 +267,9 @@ label small { color: var(--muted); font-weight: 500; }
     .service-card { flex-basis: min(72vw, 220px); }
     .service-card, .service-grid.compact .service-card { min-height: 232px; }
     .service-image { height: 116px; }
+    .service-guide-list { grid-template-columns: 1fr; }
+    .service-guide { grid-template-columns: 46px 1fr; gap: 14px; padding: 24px 20px; }
+    .service-guide-number { width: 44px; height: 44px; border-radius: 13px; }
     .carousel-button { width: 36px; height: 36px; font-size: 27px; }
     .areas-section { margin: 80px -12px 0; padding: 64px 20px; }
     .area-grid { grid-template-columns: repeat(2, 1fr); }

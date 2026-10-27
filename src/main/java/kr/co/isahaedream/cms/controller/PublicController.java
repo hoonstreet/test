@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 public class PublicController {
@@ -63,8 +64,8 @@ public class PublicController {
     public String region(@PathVariable String regionSlug, Model model) {
         Region region = region(regionSlug);
         List<MovingService> services = movingServiceRepository.findAllByEnabledTrueOrderByDisplayOrderAsc();
-        String pageTitle = region.getName() + " 이사 서비스 | 이사해드림";
-        String pageDescription = region.getName() + "의 지역별 포장이사 및 이사 서비스 상담 안내입니다.";
+        String pageTitle = serviceKeywordTitle(region.getName(), services);
+        String pageDescription = serviceKeywordDescription(region.getName(), services);
         String canonicalUrl = baseUrl + "/regions/" + region.getSlug();
         model.addAttribute("region", region);
         model.addAttribute("neighborhoods", approvedNeighborhoods(region));
@@ -124,10 +125,10 @@ public class PublicController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
         }
         List<MovingService> services = movingServiceRepository.findAllByEnabledTrueOrderByDisplayOrderAsc();
-        String pageTitle = neighborhood.getName() + " 이사 서비스 | " + region.getName() + " 이사해드림";
-        String pageDescription = region.getName() + " " + neighborhood.getName() + "의 포장이사, 보관이사, 입주이사, 사무실이사, 아파트이사 상담 안내입니다.";
-        String canonicalUrl = baseUrl + "/regions/" + region.getSlug() + "/" + neighborhood.getSlug();
         String areaName = region.getName() + " " + neighborhood.getName();
+        String pageTitle = serviceKeywordTitle(areaName, services);
+        String pageDescription = serviceKeywordDescription(areaName, services);
+        String canonicalUrl = baseUrl + "/regions/" + region.getSlug() + "/" + neighborhood.getSlug();
         model.addAttribute("region", region);
         model.addAttribute("neighborhood", neighborhood);
         model.addAttribute("services", services);
@@ -151,7 +152,7 @@ public class PublicController {
         page.put("description", description);
         page.put("inLanguage", "ko-KR");
         page.put("primaryImageOfPage", Map.of("@type", "ImageObject", "url", imageUrl,
-                "width", 1200, "height", 750));
+                "width", 1000, "height", 1000));
 
         List<Map<String, Object>> graph = new ArrayList<>();
         graph.add(page);
@@ -181,11 +182,26 @@ public class PublicController {
             item.put("@type", "ListItem");
             item.put("position", index + 1);
             item.put("name", areaName + " " + service.getName());
-            item.put("url", canonicalUrl + "/" + service.getSlug());
+            item.put("url", canonicalUrl + "#" + service.getSlug());
             item.put("image", serviceImageUrl(service.getSlug()));
             items.add(item);
         }
         return items;
+    }
+
+    private String serviceKeywordTitle(String areaName, List<MovingService> services) {
+        String keywords = services.stream()
+                .limit(3)
+                .map(MovingService::getName)
+                .collect(Collectors.joining(" "));
+        return areaName + " " + keywords + " | 이사해드림";
+    }
+
+    private String serviceKeywordDescription(String areaName, List<MovingService> services) {
+        String keywords = services.stream()
+                .map(MovingService::getName)
+                .collect(Collectors.joining(", "));
+        return areaName + "에서 이용할 수 있는 " + keywords + "의 준비사항과 상담 전 확인사항을 안내합니다.";
     }
 
     private String serviceImageUrl(String serviceSlug) {

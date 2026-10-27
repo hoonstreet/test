@@ -9,11 +9,12 @@
     <meta name="robots" th:content="${hubPublished} ? 'index,follow,max-image-preview:large' : 'noindex,follow,max-image-preview:large'">
     <meta property="og:type" content="website"><meta property="og:title" th:content="${pageTitle}">
     <meta property="og:description" th:content="${pageDescription}"><meta property="og:image" th:content="${ogImageUrl}">
-    <meta property="og:image:width" content="1200"><meta property="og:image:height" content="750">
+    <meta property="og:image:alt" th:content="|${region.name} ${neighborhood.name} 포장이사 이미지|"><meta property="og:locale" content="ko_KR">
+    <meta property="og:image:width" content="1000"><meta property="og:image:height" content="1000">
     <meta property="og:url" th:content="${canonicalUrl}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" th:content="${ogImageUrl}">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="canonical" th:href="${canonicalUrl}">
-    <link rel="stylesheet" href="/css/site.css?v=20261025-2">
+    <link rel="stylesheet" href="/css/site.css?v=20261027-1">
     <script src="/js/site.js?v=20261025-2" defer></script>
     <script type="application/ld+json" th:utext="${structuredDataJson}"></script>
 </head>
@@ -28,7 +29,7 @@
                 <strong th:text="${neighborhood.name}">중곡동</strong>
             </div>
             <span class="eyebrow">LOCAL MOVING ROUTE</span>
-            <h1><em th:text="${neighborhood.name}">중곡동</em> 이사 서비스</h1>
+            <h1><em th:text="${neighborhood.name}">중곡동</em> 포장이사·보관이사·입주이사</h1>
             <p th:text="|${region.name} ${neighborhood.name}에서 이사를 준비할 때 필요한 서비스와 상담 전 확인사항을 한곳에 정리했습니다.|"></p>
             <div class="hero-actions">
                 <a class="button primary" th:href="|tel:${site.phoneHref}|">전화 상담</a>
@@ -41,17 +42,27 @@
                 <div><span class="eyebrow">SIX MOVING ROUTES</span><h2 th:text="|${neighborhood.name} 이사 방식 6가지|">이사 방식 6가지</h2></div>
                 <p>필요한 서비스를 선택하면 해당 지역의 준비사항과 상담 안내를 확인할 수 있습니다.</p>
             </div>
-            <div class="service-carousel" data-service-carousel>
-                <button class="carousel-button previous" type="button" aria-label="이전 이사 서비스" data-carousel-previous>‹</button>
-                <div class="service-grid compact" data-carousel-track>
-                    <a class="bento service-card" th:each="service : ${services}" th:href="|/regions/${region.slug}/${neighborhood.slug}/${service.slug}|">
-                        <div class="service-image-wrap"><img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${region.name} ${neighborhood.name} ${service.name} 안내 이미지|" width="1200" height="750" loading="lazy"></div>
-                        <h3 th:text="|${neighborhood.name} ${service.name}|">중곡동 포장이사</h3>
-                        <p th:text="${service.shortDescription}"></p><span>준비사항 보기 →</span>
+            <div class="service-carousel search-service-gallery">
+                <div class="service-grid compact">
+                    <a class="bento service-card search-service-card" th:each="service, stat : ${services}" th:href="|#${service.slug}|">
+                        <div class="service-image-wrap"><img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${region.name} ${neighborhood.name} ${service.name}|" width="1000" height="1000" loading="eager" th:attr="fetchpriority=${stat.first ? 'high' : null}"></div>
+                        <h3 th:text="|${region.name} ${neighborhood.name} ${service.name}|">광진구 중곡동 포장이사</h3>
+                        <p th:text="${service.shortDescription}"></p><span>핵심 안내 보기 →</span>
                     </a>
                 </div>
-                <button class="carousel-button next" type="button" aria-label="다음 이사 서비스" data-carousel-next>›</button>
             </div>
+        </section>
+
+        <section class="section-block service-guide-list" aria-label="동별 이사 서비스 안내">
+            <article class="service-guide" th:each="service, stat : ${services}" th:id="${service.slug}">
+                <div class="service-guide-number" th:text="${#numbers.formatInteger(stat.count, 2)}">01</div>
+                <div>
+                    <span class="eyebrow">MOVING SERVICE GUIDE</span>
+                    <h2 th:text="|${region.name} ${neighborhood.name} ${service.name}|">광진구 중곡동 포장이사</h2>
+                    <p th:text="|${region.name} ${neighborhood.name}에서 ${service.name}를 준비할 때는 짐량, 건물 동선, 차량 접근과 작업 범위를 먼저 확인하는 것이 좋습니다. ${service.shortDescription}|"></p>
+                    <a class="text-link" th:href="|/regions/${region.slug}/${neighborhood.slug}/${service.slug}|" th:text="|${neighborhood.name} ${service.name} 상세 안내 보기 →|"></a>
+                </div>
+            </article>
         </section>
 
         <section class="content-layout section-block local-checks">

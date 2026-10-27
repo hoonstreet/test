@@ -10,7 +10,8 @@
     <meta property="og:title" th:content="${pageTitle}">
     <meta property="og:description" th:content="${pageDescription}">
     <meta property="og:image" th:content="${ogImageUrl}">
-    <meta property="og:image:width" content="1200"><meta property="og:image:height" content="750">
+    <meta property="og:image:alt" content="이사해드림 포장이사"><meta property="og:locale" content="ko_KR">
+    <meta property="og:image:width" content="1000"><meta property="og:image:height" content="1000">
     <meta property="og:url" th:content="${canonicalUrl}">
     <meta name="twitter:card" content="summary_large_image"><meta name="twitter:image" th:content="${ogImageUrl}">
     <meta th:if="${!#strings.isEmpty(site.naverSiteVerification)}" name="naver-site-verification" th:content="${site.naverSiteVerification}">
@@ -49,7 +50,7 @@
             </article>
 
             <article class="bento visual-card" aria-label="아파트이사 작업 이미지">
-                <img class="visual-photo" src="/images/services/apartment-move.webp" alt="아파트에서 사다리차로 이삿짐을 옮기는 작업 이미지" width="1200" height="750">
+                <img class="visual-photo" src="/images/services/apartment-move.webp" alt="이사해드림 아파트이사" width="1000" height="1000" loading="eager" fetchpriority="high">
                 <div class="visual-copy">
                     <strong>안전한 동선,<br>꼼꼼한 작업</strong>
                     <span>현장 조건을 먼저 살피고 필요한 장비와 인원을 안내합니다.</span>
@@ -67,7 +68,7 @@
                 <div class="service-grid" data-carousel-track>
                     <article class="bento service-card" th:each="service, stat : ${services}">
                         <div class="service-image-wrap">
-                            <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="|${service.name} 작업 이미지|" width="1200" height="750" loading="lazy">
+                            <img class="service-image" th:src="|/images/services/${service.slug}.webp|" th:alt="${service.name}" width="1000" height="1000" loading="eager" th:attr="fetchpriority=${stat.first ? 'high' : null}">
                             <span class="service-number" th:text="|0${stat.count}|">01</span>
                         </div>
                         <h3 th:text="${service.name}">포장이사</h3>

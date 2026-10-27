@@ -377,6 +377,10 @@ class IsaHaeDreamApplicationTests {
                         "rel=\"icon\" href=\"/favicon.svg\"")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString(
                         "property=\"og:image\" content=\"http://localhost:8080/images/services/packing-move.webp\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(
+                        "property=\"og:image:width\" content=\"1000\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(
+                        "width=\"1000\" height=\"1000\"")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("max-image-preview:large")));
 
         mockMvc.perform(get("/favicon.svg"))
@@ -388,10 +392,27 @@ class IsaHaeDreamApplicationTests {
     void regionAndNeighborhoodLandingPagesRender() throws Exception {
         mockMvc.perform(get("/regions/gwangjin-gu/junggok-dong"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("중곡동 이사 서비스")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("중곡동 포장이사")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(
+                        "광진구 중곡동 포장이사 보관이사 입주이사 | 이사해드림")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("광진구 중곡동 포장이사")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("\"@type\":\"ItemList\"")))
-                .andExpect(content().string(org.hamcrest.Matchers.containsString("광진구 중곡동 포장이사 안내 이미지")));
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(
+                        "\"url\":\"http://localhost:8080/regions/gwangjin-gu/junggok-dong#packing-move\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("href=\"#packing-move\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("id=\"packing-move\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("fetchpriority=\"high\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("loading=\"eager\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(
+                        "property=\"og:image:height\" content=\"1000\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("광진구 중곡동 포장이사\"")));
+        mockMvc.perform(get("/regions/gwangjin-gu"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(
+                        "<meta name=\"robots\" content=\"index,follow,max-image-preview:large\"")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(
+                        "광진구 포장이사 보관이사 입주이사 | 이사해드림")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString(
+                        "\"url\":\"http://localhost:8080/regions/gwangjin-gu#packing-move\"")));
         mockMvc.perform(get("/regions/jungnang-gu/packing-move"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("중랑구 포장이사")));
