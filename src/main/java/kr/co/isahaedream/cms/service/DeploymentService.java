@@ -55,6 +55,7 @@ public class DeploymentService {
         Files.createDirectories(directory);
         Path request = directory.resolve("deploy.request");
         if (Files.exists(request)) throw new IllegalStateException("처리 대기 중인 배포 요청이 있습니다.");
+        writeRequestedStatus();
         Path temporary = Files.createTempFile(directory, ".deploy-request-", ".tmp");
         try {
             Files.writeString(temporary,
@@ -62,6 +63,22 @@ public class DeploymentService {
                             + "requestedBy=" + safeValue(requestedBy) + System.lineSeparator(),
                     StandardOpenOption.TRUNCATE_EXISTING);
             Files.move(temporary, request, StandardCopyOption.ATOMIC_MOVE);
+        } finally {
+            Files.deleteIfExists(temporary);
+        }
+    }
+
+    private void writeRequestedStatus() throws IOException {
+        Path temporary = Files.createTempFile(directory, ".deploy-status-", ".tmp");
+        try {
+            Files.writeString(temporary,
+                    "state=requested" + System.lineSeparator()
+                            + "commit=" + System.lineSeparator()
+                            + "message=Deployment request is waiting for the host service." + System.lineSeparator()
+                            + "updatedAt=" + Instant.now() + System.lineSeparator(),
+                    StandardOpenOption.TRUNCATE_EXISTING);
+            Files.move(temporary, directory.resolve("deploy.status"),
+                    StandardCopyOption.ATOMIC_MOVE, StandardCopyOption.REPLACE_EXISTING);
         } finally {
             Files.deleteIfExists(temporary);
         }
