@@ -129,11 +129,11 @@ main { padding: 22px; }
 .neighborhood-card a { color: var(--blue-600); background: var(--blue-50); border-radius: 999px; padding: 5px 9px; font-size: 11px; font-weight: 800; }
 .landing-hero { background: linear-gradient(135deg, var(--blue-50), white); }
 .breadcrumb { display: flex; gap: 8px; }
-.landing-grid { display: grid; grid-template-columns: 1.55fr .7fr; gap: 46px; margin-top: 30px; align-items: end; }
+.landing-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 420px); gap: clamp(32px, 5vw, 64px); margin-top: 30px; align-items: center; }
 .landing-grid article > p { max-width: 720px; color: var(--muted); font-size: 18px; }
-.landing-aside { display: grid; gap: 14px; }
-.landing-media { margin: 0; padding: 0; overflow: hidden; }
-.landing-media img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; }
+.landing-aside { display: grid; width: 100%; max-width: 420px; gap: 14px; justify-self: end; }
+.landing-media { width: 100%; aspect-ratio: 1 / 1; margin: 0; padding: 0; overflow: hidden; }
+.landing-media img { width: 100%; height: 100%; aspect-ratio: 1 / 1; object-fit: cover; }
 .landing-media figcaption { padding: 9px 14px 12px; color: var(--muted); font-size: 11px; }
 .consultation-card { padding: 30px; box-shadow: var(--shadow); }
 .consultation-card > span { color: var(--blue-600); font-weight: 900; }
@@ -283,6 +283,7 @@ label small { color: var(--muted); font-weight: 500; }
     .mobile-kakao { background: #fee500; }
     .sub-hero, .landing-hero { padding: 48px 24px; }
     .landing-grid, .content-layout { grid-template-columns: 1fr; }
+    .landing-aside { max-width: 480px; justify-self: center; }
     .consultation-card { margin-top: 20px; }
     .soft-panel { padding: 45px 20px; }
     .admin-shell { grid-template-columns: 1fr; }
