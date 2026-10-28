@@ -10,6 +10,8 @@ spring:
   flyway:
     enabled: true
 app:
+  analytics:
+    enabled: false
   admin:
     username: admin
     password: test-password-only-1234

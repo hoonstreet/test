@@ -6,5 +6,6 @@ target/
 *.log
 data/
 backups/
+runtime/
 source-assets/
 .DS_Store

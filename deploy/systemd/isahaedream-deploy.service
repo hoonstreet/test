@@ -1,0 +1,15 @@
+[Unit]
+Description=Deploy Isahaedream from an authenticated admin request
+After=docker.service network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=ubuntu
+Group=ubuntu
+SupplementaryGroups=docker
+WorkingDirectory=/home/ubuntu/isahaedream-site
+ExecStart=/usr/bin/bash /home/ubuntu/isahaedream-site/deploy/admin-deploy.sh
+TimeoutStartSec=30min
+NoNewPrivileges=true
+

@@ -12,6 +12,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.io.IOException;
+import java.security.Principal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -26,19 +28,25 @@ public class AdminController {
     private final LandingContentRepository landingContentRepository;
     private final LandingPageService landingPageService;
     private final SiteSettingsService settingsService;
+    private final VisitAnalyticsService analyticsService;
+    private final DeploymentService deploymentService;
 
     public AdminController(RegionRepository regionRepository,
                            NeighborhoodRepository neighborhoodRepository,
                            MovingServiceRepository movingServiceRepository,
                            LandingContentRepository landingContentRepository,
                            LandingPageService landingPageService,
-                           SiteSettingsService settingsService) {
+                           SiteSettingsService settingsService,
+                           VisitAnalyticsService analyticsService,
+                           DeploymentService deploymentService) {
         this.regionRepository = regionRepository;
         this.neighborhoodRepository = neighborhoodRepository;
         this.movingServiceRepository = movingServiceRepository;
         this.landingContentRepository = landingContentRepository;
         this.landingPageService = landingPageService;
         this.settingsService = settingsService;
+        this.analyticsService = analyticsService;
+        this.deploymentService = deploymentService;
     }
 
     @GetMapping("/login")
@@ -55,7 +63,22 @@ public class AdminController {
         model.addAttribute("landingCount", (regionCount + neighborhoodCount) * serviceCount);
         model.addAttribute("publishedCount", landingContentRepository.countByPublishedTrue());
         model.addAttribute("regions", approvedRegions());
+        model.addAttribute("visitSummary", analyticsService.summary());
+        model.addAttribute("regionVisits", analyticsService.regionRows());
+        model.addAttribute("dailyVisits", analyticsService.dailyRows());
+        model.addAttribute("deploymentStatus", deploymentService.status());
         return "admin/dashboard";
+    }
+
+    @PostMapping("/deploy")
+    public String deploy(Principal principal, RedirectAttributes redirect) {
+        try {
+            deploymentService.request(principal == null ? "admin" : principal.getName());
+            redirect.addFlashAttribute("deployMessage", "운영 배포를 요청했습니다. 잠시 후 진행 상태가 갱신됩니다.");
+        } catch (IOException | IllegalStateException e) {
+            redirect.addFlashAttribute("deployError", e.getMessage());
+        }
+        return "redirect:/admin";
     }
 
     @GetMapping("/content")

@@ -31,7 +31,13 @@ services:
       ADMIN_PASSWORD: ${ADMIN_PASSWORD:?ADMIN_PASSWORD is required}
       BASE_URL: ${BASE_URL:-http://15.164.87.34}
       SEARCH_INDEX_ENABLED: ${SEARCH_INDEX_ENABLED:-false}
+      ANALYTICS_ENABLED: ${ANALYTICS_ENABLED:-true}
+      DEPLOYMENT_DIRECTORY: /runtime/deployment
       THYMELEAF_CACHE: "true"
+    group_add:
+      - "${DEPLOYMENT_GID:-1000}"
+    volumes:
+      - ./runtime/deployment:/runtime/deployment
     ports:
       - "127.0.0.1:8080:8080"
     mem_limit: 768m

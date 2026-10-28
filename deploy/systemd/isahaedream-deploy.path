@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch for Isahaedream admin deployment requests
+
+[Path]
+PathExists=/home/ubuntu/isahaedream-site/runtime/deployment/deploy.request
+Unit=isahaedream-deploy.service
+
+[Install]
+WantedBy=multi-user.target

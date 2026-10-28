@@ -478,6 +478,8 @@ class IsaHaeDreamApplicationTests {
         mockMvc.perform(get("/admin"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("콘텐츠 현황")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("방문 현황")))
+                .andExpect(content().string(org.hamcrest.Matchers.containsString("운영 배포")))
                 .andExpect(content().string(org.hamcrest.Matchers.containsString("876")));
         mockMvc.perform(get("/admin/content"))
                 .andExpect(status().isOk())

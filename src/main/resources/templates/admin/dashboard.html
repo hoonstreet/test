@@ -1,12 +1,90 @@
 <!DOCTYPE html>
 <html lang="ko" xmlns:th="http://www.thymeleaf.org">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>관리자 | 이사해드림</title><link rel="icon" href="/favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="/css/site.css"></head>
+<head>
+    <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="refresh" content="8" th:if="${deploymentStatus.running}">
+    <title>운영 대시보드 | 이사해드림</title>
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="/css/site.css?v=20261028-2">
+</head>
 <body class="admin-body">
 <div class="admin-shell">
-    <aside class="admin-nav"><img src="/images/logo.svg" alt="이사해드림"><nav><a class="active" href="/admin">대시보드</a><a href="/admin/content">페이지 콘텐츠</a><a href="/admin/settings">사이트 설정</a><a href="/" target="_blank">홈페이지 보기</a></nav><form method="post" th:action="@{/logout}"><button type="submit">로그아웃</button></form></aside>
+    <aside class="admin-nav">
+        <img src="/images/logo.svg" alt="이사해드림">
+        <nav><a class="active" href="/admin">대시보드</a><a href="/admin/content">페이지 콘텐츠</a><a href="/admin/settings">사이트 설정</a><a href="/" target="_blank">홈페이지 보기</a></nav>
+        <form method="post" th:action="@{/logout}"><button type="submit">로그아웃</button></form>
+    </aside>
     <main class="admin-main">
-        <span class="eyebrow">DASHBOARD</span><h1>콘텐츠 현황</h1><p>검색 노출 전 각 지역 페이지에 고유한 내용을 작성하세요.</p>
-        <div class="stat-grid"><article><strong th:text="${regionCount}">14</strong><span>시·구</span></article><article><strong th:text="${neighborhoodCount}">132</strong><span>하위 동</span></article><article><strong th:text="${serviceCount}">6</strong><span>이사 서비스</span></article><article><strong th:text="${landingCount}">876</strong><span>지역·서비스 조합</span></article><article><strong th:text="${publishedCount}">0</strong><span>검수·공개 완료</span></article></div>
+        <span class="eyebrow">OPERATIONS DASHBOARD</span>
+        <h1>운영 대시보드</h1>
+        <p>콘텐츠, 방문 현황과 운영 배포 상태를 한 화면에서 확인합니다.</p>
+
+        <div class="alert" th:if="${deployMessage}" th:text="${deployMessage}"></div>
+        <div class="alert error" th:if="${deployError}" th:text="${deployError}"></div>
+
+        <section class="dashboard-section">
+            <div class="dashboard-section-title"><div><span class="eyebrow">CONTENT</span><h2>콘텐츠 현황</h2></div></div>
+            <div class="stat-grid content-stat-grid">
+                <article><strong th:text="${regionCount}">14</strong><span>시·구</span></article>
+                <article><strong th:text="${neighborhoodCount}">132</strong><span>하위 동</span></article>
+                <article><strong th:text="${serviceCount}">6</strong><span>이사 서비스</span></article>
+                <article><strong th:text="${landingCount}">876</strong><span>지역·서비스 조합</span></article>
+                <article><strong th:text="${publishedCount}">0</strong><span>검수·공개 완료</span></article>
+            </div>
+        </section>
+
+        <section class="dashboard-section">
+            <div class="dashboard-section-title"><div><span class="eyebrow">ANALYTICS</span><h2>방문 현황</h2></div><small>검색로봇·관리자·정적 파일 제외</small></div>
+            <div class="stat-grid analytics-stat-grid">
+                <article><strong th:text="${visitSummary.todayPageViews}">0</strong><span>오늘 페이지뷰</span></article>
+                <article><strong th:text="${visitSummary.todayVisitors}">0</strong><span>오늘 방문자</span></article>
+                <article><strong th:text="${visitSummary.last30PageViews}">0</strong><span>최근 30일 페이지뷰</span></article>
+                <article><strong th:text="${visitSummary.last30Visitors}">0</strong><span>최근 30일 일별 방문자 합계</span></article>
+            </div>
+            <div class="admin-dashboard-grid">
+                <article class="admin-panel dashboard-table-panel">
+                    <h3>지역별 최근 30일</h3>
+                    <div class="content-table-wrap">
+                        <table class="content-table analytics-table">
+                            <thead><tr><th>지역</th><th>페이지뷰</th><th>방문자</th></tr></thead>
+                            <tbody><tr th:each="row : ${regionVisits}"><td th:text="${row.regionName}">광진구</td><td th:text="${row.pageViews}">0</td><td th:text="${row.visitors}">0</td></tr></tbody>
+                        </table>
+                    </div>
+                </article>
+                <article class="admin-panel dashboard-table-panel">
+                    <h3>최근 14일</h3>
+                    <div class="content-table-wrap">
+                        <table class="content-table analytics-table">
+                            <thead><tr><th>날짜</th><th>페이지뷰</th><th>방문자</th></tr></thead>
+                            <tbody>
+                            <tr th:each="row : ${dailyVisits}"><td th:text="${row.dateLabel}">10월 28일</td><td th:text="${row.pageViews}">0</td><td th:text="${row.visitors}">0</td></tr>
+                            <tr th:if="${#lists.isEmpty(dailyVisits)}"><td class="empty-row" colspan="3">아직 집계된 방문이 없습니다.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="admin-panel deployment-panel">
+            <div>
+                <span class="eyebrow">DEPLOYMENT</span>
+                <h2>운영 배포</h2>
+                <p>데이터베이스를 백업한 뒤 GitHub의 최신 main 커밋을 빌드·테스트하고 운영 컨테이너를 교체합니다.</p>
+                <div class="deployment-status" th:classappend="| ${deploymentStatus.state}|">
+                    <strong th:text="${deploymentStatus.label}">배포 대기</strong>
+                    <span th:if="${deploymentStatus.commit}" th:text="|커밋 ${deploymentStatus.commit}|"></span>
+                    <span th:if="${deploymentStatus.updatedAt}" th:text="${deploymentStatus.updatedAt}"></span>
+                    <small th:if="${deploymentStatus.message}" th:text="${deploymentStatus.message}"></small>
+                </div>
+            </div>
+            <form method="post" th:action="@{/admin/deploy}" onsubmit="return confirm('데이터베이스 백업 후 최신 main 커밋을 운영에 배포합니다. 계속할까요?')">
+                <button class="button primary deploy-button" type="submit"
+                        th:disabled="${!deploymentStatus.enabled or deploymentStatus.running}"
+                        th:text="${deploymentStatus.running ? '배포 진행 중' : '최신 버전 운영 배포'}">최신 버전 운영 배포</button>
+            </form>
+        </section>
+
         <section class="admin-panel"><h2>등록 지역</h2><div class="admin-region-list"><a th:each="region : ${regions}" th:href="|/regions/${region.slug}|" target="_blank" th:text="${region.name}"></a></div></section>
     </main>
 </div>
