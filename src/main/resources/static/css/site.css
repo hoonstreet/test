@@ -279,11 +279,14 @@ label small { color: var(--muted); font-weight: 500; }
     .header-call { font-size: 12px; padding: 9px 12px; }
     main { padding: 12px; }
     .hero-grid { display: grid; grid-template-columns: 1fr; }
-    .hero-main { grid-row: auto; padding: 44px 26px; min-height: 520px; }
-    .hero-main h1 { font-size: 50px; }
+    .hero-main { grid-row: auto; padding: 30px 22px; min-height: 0; }
+    .hero-main h1 { font-size: clamp(34px, 8vw, 42px); line-height: 1.15; margin-bottom: 16px; }
+    .hero-main p { font-size: 15px; line-height: 1.6; margin-bottom: 20px; }
     .visual-card { grid-column: auto; min-height: 210px; }
-    .section-block { padding: 72px 8px 0; }
-    .section-heading { display: block; }
+    .section-block { padding: 44px 8px 0; }
+    .section-heading { display: block; margin-bottom: 22px; }
+    .section-heading h2, .content-copy h2 { font-size: 28px; line-height: 1.25; }
+    .section-heading .eyebrow { margin-bottom: 8px; }
     .section-heading p { margin-top: 14px; }
     .process-grid, .neighborhood-grid, .check-grid { grid-template-columns: 1fr; }
     .service-carousel { padding: 0 24px; }
@@ -304,7 +307,15 @@ label small { color: var(--muted); font-weight: 500; }
     .mobile-actions a { padding: 12px; text-align: center; border-radius: 12px; font-weight: 900; }
     .mobile-call { background: var(--blue-600); color: white; }
     .mobile-kakao { background: #fee500; }
-    .sub-hero, .landing-hero { padding: 48px 24px; }
+    .sub-hero, .landing-hero { padding: 28px 22px; }
+    .sub-hero h1, .landing-hero h1 { font-size: clamp(28px, 6.5vw, 34px); line-height: 1.22; margin: 20px 0 12px; }
+    .sub-hero p, .landing-grid article > p { font-size: 15px; line-height: 1.6; margin: 0 0 16px; }
+    .sub-hero > p:last-child { margin-bottom: 0; }
+    .neighborhood-hero .eyebrow { margin-top: 20px; margin-bottom: 8px; }
+    .neighborhood-hero h1 { margin-top: 0; }
+    .landing-grid { margin-top: 18px; gap: 24px; }
+    .landing-grid h1 { margin-top: 0; }
+    .breadcrumb { flex-wrap: wrap; }
     .landing-grid, .content-layout { grid-template-columns: 1fr; }
     .landing-aside { max-width: 480px; justify-self: center; }
     .consultation-card { margin-top: 20px; }
